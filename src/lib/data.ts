@@ -1,5 +1,25 @@
 // TEMPORARY DATA
 
+import {
+  Binoculars,
+  BookAlert,
+  BookOpenText,
+  CalendarRange,
+  ClipboardCheck,
+  Cog,
+  GraduationCap,
+  LayoutDashboard,
+  Library,
+  Megaphone,
+  MessageCircleCode,
+  University,
+  UserCircle,
+  UserLock,
+  Users,
+  LogOut,
+  CalendarCheck,
+} from "lucide-react";
+
 export let role = "admin";
 
 export const teachersData = [
@@ -915,7 +935,6 @@ export const announcementsData = [
   },
 ];
 
-
 // YOU SHOULD CHANGE THE DATES OF THE EVENTS TO THE CURRENT DATE TO SEE THE EVENTS ON THE CALENDAR
 export const calendarEvents = [
   {
@@ -976,8 +995,8 @@ export const calendarEvents = [
   {
     title: "History",
     allDay: false,
-    start: new Date(2026, 1, 20,  14, 0),
-    end: new Date(2026, 1, 20,  14, 45),
+    start: new Date(2026, 1, 20, 14, 0),
+    end: new Date(2026, 1, 20, 14, 45),
   },
   {
     title: "Math",
@@ -988,21 +1007,21 @@ export const calendarEvents = [
   {
     title: "Biology",
     allDay: false,
-    start: new Date(2026, 1, 20,  10, 0),
+    start: new Date(2026, 1, 20, 10, 0),
     end: new Date(22026, 1, 20, 10, 45),
   },
 
   {
     title: "Chemistry",
     allDay: false,
-    start: new Date(2026, 1, 20,  13, 0),
-    end: new Date(2026, 1, 20,  13, 45),
+    start: new Date(2026, 1, 20, 13, 0),
+    end: new Date(2026, 1, 20, 13, 45),
   },
   {
     title: "History",
     allDay: false,
-    start: new Date(2026, 1, 28,  14, 0),
-    end: new Date(2026, 1, 28,  14, 45),
+    start: new Date(2026, 1, 28, 14, 0),
+    end: new Date(2026, 1, 28, 14, 45),
   },
   {
     title: "English",
@@ -1067,85 +1086,85 @@ export const menuItems = [
     title: "MENU",
     items: [
       {
-        icon: "/home.png",
+        icon: LayoutDashboard,
         label: "Home",
         href: "/",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/teacher.png",
+        icon: GraduationCap,
         label: "Teachers",
         href: "/list/teachers",
         visible: ["admin", "teacher"],
       },
       {
-        icon: "/student.png",
+        icon: Users,
         label: "Students",
         href: "/list/students",
         visible: ["admin", "teacher"],
       },
       {
-        icon: "/parent.png",
+        icon: UserLock,
         label: "Parents",
         href: "/list/parents",
         visible: ["admin", "teacher"],
       },
       {
-        icon: "/subject.png",
+        icon: Library,
         label: "Subjects",
         href: "/list/subjects",
         visible: ["admin"],
       },
       {
-        icon: "/class.png",
+        icon: University,
         label: "Classes",
         href: "/list/classes",
         visible: ["admin", "teacher"],
       },
       {
-        icon: "/lesson.png",
+        icon: BookOpenText,
         label: "Lessons",
         href: "/list/lessons",
         visible: ["admin", "teacher"],
       },
       {
-        icon: "/exam.png",
+        icon: BookAlert,
         label: "Exams",
         href: "/list/exams",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/assignment.png",
+        icon: ClipboardCheck,
         label: "Assignments",
         href: "/list/assignments",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/result.png",
+        icon: Binoculars,
         label: "Results",
         href: "/list/results",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/attendance.png",
+        icon: CalendarCheck,
         label: "Attendance",
         href: "/list/attendance",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/calendar.png",
+        icon: CalendarRange,
         label: "Events",
         href: "/list/events",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/message.png",
+        icon: MessageCircleCode,
         label: "Messages",
         href: "/list/messages",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/announcement.png",
+        icon: Megaphone,
         label: "Bulletins",
         href: "/list/announcements",
         visible: ["admin", "teacher", "student", "parent"],
@@ -1156,21 +1175,21 @@ export const menuItems = [
     title: "OTHER",
     items: [
       {
-        icon: "/profile.png",
+        icon: UserCircle,
         label: "Profile",
         href: "/profile",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/setting.png",
+        icon: Cog,
         label: "Settings",
         href: "/settings",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
-        icon: "/logout.png",
         label: "Logout",
         href: "/logout",
+        icon: LogOut,
         visible: ["admin", "teacher", "student", "parent"],
       },
     ],

@@ -1,4 +1,5 @@
 // import FormModal from "@/components/FormModal";
+import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
@@ -40,8 +41,8 @@ const SubjectListPage = () => {
         <div className="flex items-center gap-2">
           {role === "admin" && (
             <>
-              {/* <FormModal table="subject" type="update" data={item} />
-              <FormModal table="subject" type="delete" id={item.id} /> */}
+              <FormModal table="subject" type="update" data={item} />
+              <FormModal table="subject" type="delete" id={item.id} />
             </>
           )}
         </div>
@@ -63,10 +64,8 @@ const SubjectListPage = () => {
             <button className="button-rounded">
               <SortAsc className="icon" />
             </button>
-            <button className="button-rounded">
-              <Plus className="icon" />
-            </button>
-            {/* {role === "admin" && <FormModal table="teacher" type="create" />} */}
+
+            {role === "admin" && <FormModal table="subject" type="create" />}
           </div>
         </div>
       </div>

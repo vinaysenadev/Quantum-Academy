@@ -1,4 +1,5 @@
 // import FormModal from "@/components/FormModal";
+import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
@@ -51,13 +52,12 @@ const AssignmentListPage = () => {
       <td className="hidden md:table-cell">{item.dueDate}</td>
       <td>
         <div className="flex items-center gap-2">
-          {role === "admin" ||
-            (role === "teacher" && (
-              <>
-                {/* <FormModal table="assignment" type="update" data={item} />
-              <FormModal table="assignment" type="delete" id={item.id} /> */}
-              </>
-            ))}
+          {role === "admin" && (
+            <>
+              <FormModal table="assignment" type="update" data={item} />
+              <FormModal table="assignment" type="delete" id={item.id} />
+            </>
+          )}
         </div>
       </td>
     </tr>
@@ -79,10 +79,8 @@ const AssignmentListPage = () => {
             <button className="button-rounded">
               <SortAsc className="icon" />
             </button>
-            <button className="button-rounded">
-              <Plus className="icon" />
-            </button>
-            {/* {role === "admin" && <FormModal table="teacher" type="create" />} */}
+
+            {role === "admin" && <FormModal table="assignment" type="create" />}
           </div>
         </div>
       </div>
