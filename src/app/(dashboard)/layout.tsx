@@ -12,10 +12,10 @@ export default function DashboardLayout({
   return (
     <div className="h-screen flex">
       {/* LEFT */}
-      <div className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[14%] p-4">
+      <div className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[14%]">
         <Link
           href="/"
-          className="flex items-center lg:justify-start gap-2 mb-2"
+          className="flex justify-center items-center lg:justify-start gap-2 mb-2 p-4"
         >
           <School size={30} color={"#581c87"} />
           <span className="hidden text-md lg:block font-bold text-purple-900">
