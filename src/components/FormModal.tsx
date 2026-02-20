@@ -1,7 +1,23 @@
 "use client";
 
 import { Plus, Edit, Trash2, X, TriangleAlert } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+// import TeacherForm from "./forms/TeacherForm";
+// import StudentForm from "./forms/StudentForm";
+const TeacherForm = dynamic(() => import("./forms/TeacherForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const StudentForm = dynamic(() => import("./forms/StudentForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+
+const forms: {
+  [key: string]: (type: "create" | "update", data?: any) => JSX.Element;
+} = {
+  teacher: (type, data) => <TeacherForm type={type} data={data} />,
+  student: (type, data) => <StudentForm type={type} data={data} />,
+};
 
 const FormModal = ({
   table,
@@ -28,13 +44,6 @@ const FormModal = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "auto";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [open]);
-
   // ESC key close
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -47,7 +56,7 @@ const FormModal = ({
   const Form = () => {
     return type === "delete" && id ? (
       <form action="">
-        <div className="flex flex-col justify-center items-center h-screen gap-4">
+        <div className="flex flex-col justify-center items-center h-[90vh] gap-4">
           <TriangleAlert className="icon size-40 text-[#FFC107]" />
           <span className="text-xl text-center">
             All data will be lost. Are you sure you want to delete this {table}?
@@ -60,17 +69,28 @@ const FormModal = ({
           </button>
         </div>
       </form>
+    ) : type === "create" || type === "update" ? (
+      forms[table](type, data)
     ) : (
-      <></>
+      "Form not found!"
     );
   };
 
   return (
     <>
-      <button className="button-rounded" onClick={() => setOpen(true)}>
-        {type === "create" && <Plus className="icon" />}
+      <button
+        className={
+          type === "create"
+            ? "button-rounded"
+            : type === "delete"
+            ? "button-rounded-delete"
+            : "button-rounded-purple"
+        }
+        onClick={() => setOpen(true)}
+      >
+        {type === "create" && <Plus className=" " />}
         {type === "update" && <Edit className="icon" />}
-        {type === "delete" && <Trash2 className="icon" />}
+        {type === "delete" && <Trash2 className="icon text-black" />}
       </button>
 
       <div
@@ -86,18 +106,18 @@ const FormModal = ({
         />
 
         <div
-          className={`absolute top-0 right-0 h-full w-[90%] md:w-[500px] bg-gray-200 shadow-2xl p-6
-          transform transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
-          ${open ? "translate-x-0" : "translate-x-full"}`}
+          className={`absolute top-0 right-0 h-full w-[90%] md:w-[500px] bg-gray-50 shadow-2xl p-6
+            transform transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]
+            ${open ? "translate-x-0" : "translate-x-full"}`}
         >
-          <button
-            className="absolute top-4 right-4 cursor-pointer"
-            onClick={() => setOpen(false)}
-          >
-            <X className="icon size-8" />
-          </button>
+          <div className="h-full overflow-y-auto p-2">
+            <button
+              className="absolute top-4 right-4 cursor-pointer"
+              onClick={() => setOpen(false)}
+            >
+              <X className="icon size-8" />
+            </button>
 
-          <div className="h-full">
             <Form />
           </div>
         </div>
