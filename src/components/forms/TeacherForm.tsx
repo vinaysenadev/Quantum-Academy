@@ -25,7 +25,12 @@ const schema = z.object({
     message: "Birthday is required!",
   }),
   sex: z.enum(["male", "female"], { message: "Sex is required!" }),
-  img: z.instanceof(File, { message: "Image is required" }),
+  img: z
+    .any()
+    .refine(
+      (file) => typeof window !== "undefined" && file instanceof File,
+      "Image is required"
+    ),
 });
 
 const TeacherForm = ({

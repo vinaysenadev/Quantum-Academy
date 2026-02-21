@@ -70,7 +70,11 @@ const FormModal = ({
         </div>
       </form>
     ) : type === "create" || type === "update" ? (
-      forms[table](type, data)
+      forms[table] ? (
+        forms[table](type, data)
+      ) : (
+        <p>No form available for {table}</p>
+      )
     ) : (
       "Form not found!"
     );

@@ -1,11 +1,9 @@
-// import FormModal from "@/components/FormModal";
 import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { role, subjectsData } from "@/lib/data";
 import { Filter, Plus, SortAsc } from "lucide-react";
-import Image from "next/image";
 
 type Subject = {
   id: number;
