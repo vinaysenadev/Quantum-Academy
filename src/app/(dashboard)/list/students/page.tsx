@@ -113,7 +113,7 @@ const StudentListPage = () => {
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={studentsData} />
       {/* PAGINATION */}
-      <Pagination page={1} count={2} />
+      <Pagination page={1} count={15} />
     </div>
   );
 };
