@@ -40,7 +40,7 @@ const FormModal = ({
     | "announcement";
   type: "create" | "update" | "delete";
   data?: any;
-  id?: number;
+  id?: string | number;
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -92,7 +92,7 @@ const FormModal = ({
         }
         onClick={() => setOpen(true)}
       >
-        {type === "create" && <Plus className=" " />}
+        {type === "create" && <Plus className="icon" />}
         {type === "update" && <Edit className="icon" />}
         {type === "delete" && <Trash2 className="icon text-black" />}
       </button>

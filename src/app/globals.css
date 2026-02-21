@@ -4,13 +4,13 @@
 
 @layer components {
   .icon {
-    @apply text-gray-600 size-[20px];
+    @apply text-gray-600 size-[16px];
   }
   .icon-white {
     @apply text-white;
   }
   .button-rounded {
-    @apply rounded-full bg-Yellow p-2 cursor-pointer hover:bg-Sky;
+    @apply flex items-center justify-center rounded-full w-8 h-8 bg-Yellow hover:bg-Sky;
   }
   .button-rounded-delete {
     @apply rounded-full bg-red-400 text-black p-2 cursor-pointer hover:bg-red-300;
