@@ -32,7 +32,7 @@ const schema = z.object({
       "Image is required"
     ),
 });
-
+type TeacherFormValues = z.infer<typeof schema>;
 const TeacherForm = ({
   type,
   data,
@@ -44,7 +44,7 @@ const TeacherForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(schema) });
+  } = useForm<TeacherFormValues>({ resolver: zodResolver(schema) });
 
   const onSubmit = (data: any) => {
     console.log(data);
