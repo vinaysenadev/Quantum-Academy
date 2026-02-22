@@ -1,4 +1,5 @@
 "use client";
+import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import {
   RadialBarChart,
@@ -27,11 +28,11 @@ const data = [
 
 const CountChart = () => {
   return (
-    <div className="bg-white rounded-xl w-full h-full p-4">
+    <div className="bg-white rounded-xl w-full h-full p-4 pb-6">
       {/* TITLE */}
       <div className="flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Students</h1>
-        <Image src="/moreDark.png" alt="" width={20} height={20} />
+        <h1 className="text-md font-semibold">Students</h1>
+        <MoreHorizontal className="text-gray-400" />
       </div>
       {/* CHART */}
       <div className="relative w-full h-[75%]">

@@ -10,6 +10,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 const SingleTeacherPage = () => {
+  const teacher = {
+    id: "teacher1",
+  };
   return (
     <div className="flex-1 p-4 flex flex-col gap-4 xl:flex-row">
       {/* LEFT */}
@@ -146,19 +149,34 @@ const SingleTeacherPage = () => {
         <div className="bg-white p-4 rounded-md">
           <h1 className="text-xl font-semibold">Shortcuts</h1>
           <div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
-            <Link className="p-3 rounded-md bg-SkyLight" href="/">
+            <Link
+              className="p-3 rounded-md bg-SkyLight"
+              href={`/list/classes?supervisorId=${teacher.id}`}
+            >
               Teacher&apos;s Classes
             </Link>
-            <Link className="p-3 rounded-md bg-PurpleLight" href="/">
+            <Link
+              className="p-3 rounded-md bg-PurpleLight"
+              href={`/list/students?teacherId=${teacher.id}`}
+            >
               Teacher&apos;s Students
             </Link>
-            <Link className="p-3 rounded-md bg-YellowLight" href="/">
+            <Link
+              className="p-3 rounded-md bg-YellowLight"
+              href={`/list/lessons?teacherId=${teacher.id}`}
+            >
               Teacher&apos;s Lessons
             </Link>
-            <Link className="p-3 rounded-md bg-pink-50" href="/">
+            <Link
+              className="p-3 rounded-md bg-pink-50"
+              href={`/list/exams?teacherId=${teacher.id}`}
+            >
               Teacher&apos;s Exams
             </Link>
-            <Link className="p-3 rounded-md bg-SkyLight" href="/">
+            <Link
+              className="p-3 rounded-md bg-SkyLight"
+              href={`/list/assignments?teacherId=${teacher.id}`}
+            >
               Teacher&apos;s Assignments
             </Link>
           </div>

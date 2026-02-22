@@ -1,75 +1,57 @@
 "use client";
 
-import { ITEMS_PER_PAGE } from "@/lib/settings";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-const Pagination = ({ page, count }: { page: number; count: number }) => {
+type Props = {
+  page: number;
+  count: number;
+};
+
+export default function Pagination({ page, count }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
-  const hasPrev = ITEMS_PER_PAGE * (page - 1) > 0;
-  const hasNext = ITEMS_PER_PAGE * (page - 1) + ITEMS_PER_PAGE < count;
+  const totalPages = Math.ceil(count / 10); // use your ITEMS_PER_PAGE
 
-  const handlePageChange = (newPage: number) => {
-    const params = new URLSearchParams(window.location.search);
-    params.set("page", newPage.toString());
-    router.push(`${window.location.pathname}?${params}`);
+  const changePage = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(newPage));
+
+    startTransition(() => {
+      router.push(`?${params.toString()}`);
+    });
   };
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-end gap-4 mt-6 pr-0">
+      {/* Loading indicator */}
+      {isPending && (
+        <>
+          <div className="w-5 h-5 border-2 border-Purple/30 border-t-Purple rounded-full animate-spin" />
+          Loading...
+        </>
+      )}
       <button
-        disabled={!hasPrev}
-        className={`text-gray-600 text-sm flex flex-row gap-1 items-center border-[1px] p-1 pr-2 rounded-md ${
-          !hasPrev
-            ? "bg-gray-200 cursor-not-allowed"
-            : "bg-Sky cursor:pointer hover:bg-SkyLight"
-        }  `}
-        onClick={() => handlePageChange(page - 1)}
+        disabled={page <= 1 || isPending}
+        onClick={() => changePage(page - 1)}
+        className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
       >
-        <ChevronsLeft className="text-gray-500" /> Previous
+        Prev
       </button>
-      <div className="flex gap-2">
-        {Array.from(
-          { length: Math.ceil(count / ITEMS_PER_PAGE) },
-          (_, index) => {
-            const pageIndex = index + 1;
-            return (
-              <button
-                key={pageIndex}
-                className={`${
-                  page === pageIndex
-                    ? "button-rounded"
-                    : "hover:bg-Sky rounded-full w-8 h-8"
-                }`}
-                onClick={() => handlePageChange(pageIndex)}
-              >
-                {pageIndex}
-              </button>
-            );
-          }
-        )}
-      </div>
+
+      <span className="text-sm">
+        Page {page} of {totalPages}
+      </span>
 
       <button
-        disabled={!hasNext}
-        className={`text-gray-600 flex  text-sm flex-row gap-1 items-center border-[1px] p-1 pl-2 rounded-md ${
-          !hasNext
-            ? "bg-gray-200 cursor-not-allowed"
-            : "bg-Sky cursor:pointer hover:bg-SkyLight"
-        } `}
-        onClick={() => handlePageChange(page + 1)}
+        disabled={page >= totalPages || isPending}
+        onClick={() => changePage(page + 1)}
+        className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
       >
         Next
-        <ChevronsRight className="icon" />
       </button>
     </div>
   );
-};
-
-export default Pagination;
+}

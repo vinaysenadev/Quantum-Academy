@@ -1,4 +1,5 @@
 "use client";
+import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import {
   BarChart,
@@ -44,8 +45,8 @@ const AttendanceChart = () => {
   return (
     <div className="bg-white rounded-lg p-4 h-full">
       <div className="flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Attendance</h1>
-        <Image src="/moreDark.png" alt="" width={20} height={20} />
+        <h1 className="text-md font-semibold">Attendance</h1>
+        <MoreHorizontal className="text-gray-400" />
       </div>
       <ResponsiveContainer width="100%" height="90%">
         <BarChart width={500} height={300} data={data} barSize={20}>
@@ -53,17 +54,29 @@ const AttendanceChart = () => {
           <XAxis
             dataKey="name"
             axisLine={false}
-            tick={{ fill: "#d1d5db" }}
+            tick={{ fill: "#d1d5db", fontSize: "14px" }}
             tickLine={false}
           />
-          <YAxis axisLine={false} tick={{ fill: "#d1d5db" }} tickLine={false} />
+          <YAxis
+            axisLine={false}
+            tick={{ fill: "#d1d5db", fontSize: "14px" }}
+            tickLine={false}
+          />
           <Tooltip
-            contentStyle={{ borderRadius: "10px", borderColor: "lightgray" }}
+            contentStyle={{
+              borderRadius: "10px",
+              borderColor: "lightgray",
+              fontSize: "14px",
+            }}
           />
           <Legend
             align="left"
             verticalAlign="top"
-            wrapperStyle={{ paddingTop: "20px", paddingBottom: "40px" }}
+            wrapperStyle={{
+              paddingTop: "20px",
+              paddingBottom: "40px",
+              fontSize: "14px",
+            }}
           />
           <Bar
             dataKey="present"

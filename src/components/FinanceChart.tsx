@@ -1,5 +1,6 @@
 "use client";
 
+import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import {
   LineChart,
@@ -79,8 +80,8 @@ const FinanceChart = () => {
   return (
     <div className="bg-white rounded-xl w-full h-full p-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Finance</h1>
-        <Image src="/moreDark.png" alt="" width={20} height={20} />
+        <h1 className="text-md font-semibold">Finance</h1>
+        <MoreHorizontal className="text-gray-400" />
       </div>
       <ResponsiveContainer width="100%" height="90%">
         <LineChart
@@ -98,13 +99,13 @@ const FinanceChart = () => {
           <XAxis
             dataKey="name"
             axisLine={false}
-            tick={{ fill: "#d1d5db" }}
+            tick={{ fill: "#d1d5db", fontSize: "14px" }}
             tickLine={false}
             tickMargin={10}
           />
           <YAxis
             axisLine={false}
-            tick={{ fill: "#d1d5db" }}
+            tick={{ fill: "#d1d5db", fontSize: "14px" }}
             tickLine={false}
             tickMargin={20}
           />

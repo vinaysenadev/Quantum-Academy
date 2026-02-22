@@ -1,5 +1,6 @@
 "use client";
 
+import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import Calendar from "react-calendar";
@@ -38,8 +39,8 @@ const EventCalendar = () => {
     <div className="bg-white p-4 rounded-md">
       <Calendar onChange={onChange} value={value} />
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold my-4">Events</h1>
-        <Image src="/moreDark.png" alt="" width={20} height={20} />
+        <h1 className="text-md font-semibold my-4">Events</h1>
+        <MoreHorizontal className="text-gray-400" />
       </div>
       <div className="flex flex-col gap-4">
         {events.map((event) => (

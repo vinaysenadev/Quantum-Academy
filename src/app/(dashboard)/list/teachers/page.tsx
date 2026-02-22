@@ -7,7 +7,7 @@ import TableSearch from "@/components/TableSearch";
 import { role } from "@/lib/data";
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/settings";
-import { Class, Subject, Teacher } from "@prisma/client";
+import { Class, Prisma, Subject, Teacher } from "@prisma/client";
 import { Filter, SortAsc, View } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -53,7 +53,7 @@ const columns = [
 const renderRow = (item: TeacherList) => (
   <tr
     key={item.id}
-    className="text-left border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-PurpleLight"
+    className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-PurpleLight"
   >
     <td className="flex items-center text-left gap-4 p-2 ">
       <Image
@@ -75,17 +75,17 @@ const renderRow = (item: TeacherList) => (
         <p className="text-xs text-gray-500">{item?.email}</p>
       </div>
     </td>
-    <td className="hidden md:table-cell">{item.username}</td>
-    <td className="hidden md:table-cell">
+    <td className="hidden md:table-cell text-center">{item.username}</td>
+    <td className="hidden md:table-cell text-center">
       {item.subjects.map((subject) => subject.name).join(",")}
     </td>
-    <td className="hidden md:table-cell">
+    <td className="hidden md:table-cell text-center">
       {item.classes.map((classItem) => classItem.name).join(",") || "-"}
     </td>
-    <td className="hidden md:table-cell">{item.phone}</td>
-    <td className="hidden md:table-cell">{item.address}</td>
+    <td className="hidden md:table-cell text-center">{item.phone}</td>
+    <td className="hidden md:table-cell text-center">{item.address}</td>
     <td>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-center gap-2">
         <Link href={`/list/teachers/${item.id}`}>
           <button className="button-rounded bg-Purple hover:bg-white">
             <View className="icon" />
@@ -98,16 +98,42 @@ const renderRow = (item: TeacherList) => (
     </td>
   </tr>
 );
+
 const TeacherListPage = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
   const { page, ...queryParams } = searchParams;
+
   const p = page ? parseInt(page) : 1;
+  // url params
+  const query: Prisma.TeacherWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "classId":
+            query.lessons = {
+              some: {
+                classId: parseInt(value),
+              },
+            };
+            break;
+          case "search":
+            query.name = { contains: value, mode: "insensitive" };
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
 
   const [data, count] = await prisma.$transaction([
     prisma.teacher.findMany({
+      where: query,
       include: {
         subjects: true,
         classes: true,
@@ -115,14 +141,16 @@ const TeacherListPage = async ({
       take: ITEMS_PER_PAGE,
       skip: ITEMS_PER_PAGE * (p - 1),
     }),
-    prisma.teacher.count(),
+    prisma.teacher.count({ where: query }),
   ]);
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* top */}
       <div className="flex flex-row items-center justify-between">
-        <h1 className="hidden md:block text-lg font-semibold">All Teachers</h1>
+        <h1 className="hidden md:block text-md font-semibold">
+          All Teachers ({count})
+        </h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
 

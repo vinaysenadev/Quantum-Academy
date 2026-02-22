@@ -20,22 +20,22 @@ const AdminPage = () => {
         </div>
         {/* charts */}
         <div className="flex gap-4 flex-col lg:flex-row">
-          <div className="w-full lg:w-1/3 h-[450px]">
+          <div className="w-full lg:w-1/3 h-[370px]">
             <CountChart />
           </div>
           {/* attendance */}
-          <div className="w-full lg:w-2/3 h-[450px]">
+          <div className="w-full lg:w-2/3 h-[370px]">
             <AttendanceChart />
           </div>
         </div>
         {/* finance chart */}
-        <div className="w-full h-[500px]">
+        <div className="w-full h-[450px]">
           <FinanceChart />
         </div>
       </div>
 
       {/* right */}
-      <div className="border-2 w-full lg:w-1/3">
+      <div className="border-[1.5px] rounded-md w-full lg:w-1/3">
         <EventCalendar />
         <Announcements />
       </div>
