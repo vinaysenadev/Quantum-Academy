@@ -1,14 +1,10 @@
-// import FormModal from "@/components/FormModal";
 import FormModal from "@/components/FormModal";
-import Pagination from "@/components/Pagination";
-import Table from "@/components/Table";
-import TableSearch from "@/components/TableSearch";
-
+import ListPageContainer from "@/components/ListPageContainer";
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/settings";
 import { currentUser } from "@clerk/nextjs/server";
 import { Class, Exam, Prisma, Subject, Teacher } from "@prisma/client";
-import { Filter, Plus, SortAsc } from "lucide-react";
+import { getPageNumber } from "@/lib/queryUtils";
 
 type ExamList = Exam & {
   lesson: {
@@ -28,26 +24,24 @@ const ExamListPage = async ({
 
   const { page, ...queryParams } = searchParams;
 
-  const p = page ? parseInt(page) : 1;
+  const p = getPageNumber(page);
 
-  // URL PARAMS CONDITION
-
-  const query: Prisma.ExamWhereInput = {};
-
-  query.lesson = {};
+  const query: Prisma.ExamWhereInput = {
+    lesson: {}
+  };
 
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
         switch (key) {
           case "classId":
-            query.lesson.classId = parseInt(value);
+            (query.lesson as any).classId = parseInt(value);
             break;
           case "teacherId":
-            query.lesson.teacherId = value;
+            (query.lesson as any).teacherId = value;
             break;
           case "search":
-            query.lesson.subject = {
+            (query.lesson as any).subject = {
               name: { contains: value, mode: "insensitive" },
             };
             break;
@@ -130,31 +124,16 @@ const ExamListPage = async ({
   );
 
   return (
-    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-      {/* TOP */}
-      <div className="flex items-center justify-between">
-        <h1 className="hidden md:block text-lg font-semibold">
-          All Exams ({count})
-        </h1>
-        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-          <TableSearch />
-          <div className="flex gap-4">
-            <button className="button-rounded">
-              <Filter className="icon" />
-            </button>
-            <button className="button-rounded">
-              <SortAsc className="icon" />
-            </button>
-
-            {role === "admin" && <FormModal table="exam" type="create" />}
-          </div>
-        </div>
-      </div>
-      {/* LIST */}
-      <Table columns={columns} renderRow={renderRow} data={data} />
-      {/* PAGINATION */}
-      <Pagination page={p} count={count} />
-    </div>
+    <ListPageContainer
+      title="All Exams"
+      count={count}
+      table="exam"
+      role={role}
+      columns={columns}
+      renderRow={renderRow}
+      data={data}
+      page={p}
+    />
   );
 };
 

@@ -1,14 +1,10 @@
-// import FormModal from "@/components/FormModal";
 import FormModal from "@/components/FormModal";
-import Pagination from "@/components/Pagination";
-import Table from "@/components/Table";
-import TableSearch from "@/components/TableSearch";
-
+import ListPageContainer from "@/components/ListPageContainer";
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/settings";
 import { currentUser } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";
-import { Filter, Plus, SortAsc } from "lucide-react";
+import { getPageNumber } from "@/lib/queryUtils";
 
 type ResultList = {
   id: number;
@@ -31,9 +27,7 @@ const ResultListPage = async ({
   const role = user?.publicMetadata.role as string;
   const { page, ...queryParams } = searchParams;
 
-  const p = page ? parseInt(page) : 1;
-
-  // URL PARAMS CONDITION
+  const p = getPageNumber(page);
 
   const query: Prisma.ResultWhereInput = {};
 
@@ -56,31 +50,6 @@ const ResultListPage = async ({
       }
     }
   }
-
-  // ROLE CONDITIONS
-
-  // switch (role) {
-  //   case "admin":
-  //     break;
-  //   case "teacher":
-  //     query.OR = [
-  //       { exam: { lesson: { teacherId: currentUserId! } } },
-  //       { assignment: { lesson: { teacherId: currentUserId! } } },
-  //     ];
-  //     break;
-
-  //   case "student":
-  //     query.studentId = currentUserId!;
-  //     break;
-
-  //   case "parent":
-  //     query.student = {
-  //       parentId: currentUserId!,
-  //     };
-  //     break;
-  //   default:
-  //     break;
-  // }
 
   const [dataRes, count] = await prisma.$transaction([
     prisma.result.findMany({
@@ -130,9 +99,9 @@ const ResultListPage = async ({
       teacherSurname: assessment.lesson.teacher.surname,
       score: item.score,
       className: assessment.lesson.class.name,
-      startTime: isExam ? assessment.startTime : assessment.startDate,
+      startTime: isExam ? assessment.startTime : (assessment as any).startDate,
     };
-  });
+  }).filter(Boolean) as ResultList[];
 
   const columns = [
     {
@@ -165,11 +134,11 @@ const ResultListPage = async ({
     },
     ...(role === "admin" || role === "teacher"
       ? [
-          {
-            header: "Actions",
-            accessor: "action",
-          },
-        ]
+        {
+          header: "Actions",
+          accessor: "action",
+        },
+      ]
       : []),
   ];
   const renderRow = (item: ResultList) => (
@@ -179,7 +148,7 @@ const ResultListPage = async ({
     >
       <td className="flex items-center gap-4 p-4 text-center ">{item.title}</td>
       <td className="text-center">
-        {item.studentName + " " + item.studentName}
+        {item.studentName + " " + item.studentSurname}
       </td>
       <td className="hidden md:table-cell text-center">{item.score}</td>
       <td className="hidden md:table-cell text-center">
@@ -201,32 +170,18 @@ const ResultListPage = async ({
       )}
     </tr>
   );
-  return (
-    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-      {/* TOP */}
-      <div className="flex items-center justify-between">
-        <h1 className="hidden md:block text-lg font-semibold">
-          All Results ({count})
-        </h1>
-        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-          <TableSearch />
-          <div className="flex gap-4">
-            <button className="button-rounded">
-              <Filter className="icon" />
-            </button>
-            <button className="button-rounded">
-              <SortAsc className="icon" />
-            </button>
 
-            {role === "admin" && <FormModal table="result" type="create" />}
-          </div>
-        </div>
-      </div>
-      {/* LIST */}
-      <Table columns={columns} renderRow={renderRow} data={data} />
-      {/* PAGINATION */}
-      <Pagination page={p} count={count} />
-    </div>
+  return (
+    <ListPageContainer
+      title="All Results"
+      count={count}
+      table="result"
+      role={role}
+      columns={columns}
+      renderRow={renderRow}
+      data={data}
+      page={p}
+    />
   );
 };
 

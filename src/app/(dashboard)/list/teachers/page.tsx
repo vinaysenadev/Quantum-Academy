@@ -1,17 +1,16 @@
 export const dynamic = "force-dynamic";
 
 import FormModal from "@/components/FormModal";
-import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import TableSearch from "@/components/TableSearch";
-
+import ListPageContainer from "@/components/ListPageContainer";
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/settings";
 import { currentUser } from "@clerk/nextjs/server";
 import { Class, Prisma, Subject, Teacher } from "@prisma/client";
-import { Filter, SortAsc, View } from "lucide-react";
+import { View } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getPageNumber } from "@/lib/queryUtils";
 
 type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
 
@@ -24,8 +23,8 @@ const TeacherListPage = async ({
   const role = user?.publicMetadata.role as string;
   const { page, ...queryParams } = searchParams;
 
-  const p = page ? parseInt(page) : 1;
-  // url params
+  const p = getPageNumber(page);
+
   const query: Prisma.TeacherWhereInput = {};
 
   if (queryParams) {
@@ -94,11 +93,11 @@ const TeacherListPage = async ({
     },
     ...(role === "admin" || role === "teacher"
       ? [
-          {
-            header: "Actions",
-            accessor: "action",
-          },
-        ]
+        {
+          header: "Actions",
+          accessor: "action",
+        },
+      ]
       : []),
   ];
 
@@ -113,8 +112,8 @@ const TeacherListPage = async ({
             item.img
               ? item?.img
               : item?.sex === "FEMALE"
-              ? "/women.png"
-              : "/male.png"
+                ? "/women.png"
+                : "/male.png"
           }
           alt=""
           width={30}
@@ -150,37 +149,18 @@ const TeacherListPage = async ({
       </td>
     </tr>
   );
+
   return (
-    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-      {/* top */}
-      <div className="flex flex-row items-center justify-between">
-        <h1 className="hidden md:block text-md font-semibold">
-          All Teachers ({count})
-        </h1>
-        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-          <TableSearch />
-
-          <div className="flex gap-2 items-center">
-            <button className="button-rounded">
-              <Filter className="icon" />
-            </button>
-            <button className="button-rounded">
-              <SortAsc className="icon" />
-            </button>
-            {role === "admin" && <FormModal table="teacher" type="create" />}
-          </div>
-        </div>
-      </div>
-
-      {/* list */}
-
-      <Table columns={columns} renderRow={renderRow} data={data} />
-
-      {/* pagination */}
-      <div className="">
-        <Pagination page={p} count={count} />
-      </div>
-    </div>
+    <ListPageContainer
+      title="All Teachers"
+      count={count}
+      table="teacher"
+      role={role}
+      columns={columns}
+      renderRow={renderRow}
+      data={data}
+      page={p}
+    />
   );
 };
 
