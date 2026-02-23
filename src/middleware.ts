@@ -12,23 +12,28 @@ export default clerkMiddleware((auth, req) => {
   const pathname = req.nextUrl.pathname;
   const role = sessionClaims?.role as string | undefined;
 
-  // 🔒 If not logged in → block protected routes
   const isProtected = matchers.some(({ matcher }) => matcher(req));
 
+  // 🔒 Not signed in → protect routes
   if (!userId && isProtected) {
     return auth().redirectToSignIn();
   }
 
-  // 🔁 Redirect root "/" to role dashboard
-  if (userId && pathname === "/") {
-    return NextResponse.redirect(new URL(`/${role}`, req.url));
+  // ⚠️ If logged in but role missing → allow (prevent crash)
+  if (userId && !role) {
+    return NextResponse.next();
   }
 
-  // 🔐 Role restriction
+  // 🔁 Redirect "/" to dashboard safely
+  if (userId && role && pathname === "/") {
+    return NextResponse.redirect(new URL(`/${role}`, req.nextUrl.origin));
+  }
+
+  // 🔐 Role-based restriction
   if (userId && role) {
     for (const { matcher, allowedRoles } of matchers) {
       if (matcher(req) && !allowedRoles.includes(role)) {
-        return NextResponse.redirect(new URL(`/${role}`, req.url));
+        return NextResponse.redirect(new URL(`/${role}`, req.nextUrl.origin));
       }
     }
   }
