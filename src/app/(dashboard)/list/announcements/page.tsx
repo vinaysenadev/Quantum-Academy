@@ -33,7 +33,16 @@ const AnnouncementListPage = async ({
       }
     }
   }
+  const roleConditions = {
+    teacher: { lessons: { some: { teacherId: user?.id } } },
+    student: { students: { some: { id: user?.id } } },
+    parent: { students: { some: { parentId: user?.id } } },
+  };
 
+  query.OR = [
+    { classId: null },
+    { class: roleConditions[role as keyof typeof roleConditions] || {} },
+  ];
   const [data, count] = await prisma.$transaction([
     prisma.announcement.findMany({
       where: query,
@@ -62,11 +71,11 @@ const AnnouncementListPage = async ({
     },
     ...(role === "admin"
       ? [
-        {
-          header: "Actions",
-          accessor: "action",
-        },
-      ]
+          {
+            header: "Actions",
+            accessor: "action",
+          },
+        ]
       : []),
   ];
   const renderRow = (item: AnnouncementList) => (

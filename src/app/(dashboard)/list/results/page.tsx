@@ -50,6 +50,26 @@ const ResultListPage = async ({
       }
     }
   }
+  switch (role) {
+    case "admin":
+      break;
+    case "teacher":
+      query.OR = [
+        { exam: { lesson: { teacherId: user?.id } } },
+        { assignment: { lesson: { teacherId: user?.id } } },
+      ];
+      break;
+    case "student":
+      query.studentId = user?.id;
+      break;
+    case "parent":
+      query.student = {
+        parentId: user?.id,
+      };
+      break;
+    default:
+      break;
+  }
 
   const [dataRes, count] = await prisma.$transaction([
     prisma.result.findMany({
@@ -83,25 +103,29 @@ const ResultListPage = async ({
     prisma.result.count({ where: query }),
   ]);
 
-  const data = dataRes.map((item) => {
-    const assessment = item.exam || item.assignment;
+  const data = dataRes
+    .map((item) => {
+      const assessment = item.exam || item.assignment;
 
-    if (!assessment) return null;
+      if (!assessment) return null;
 
-    const isExam = "startTime" in assessment;
+      const isExam = "startTime" in assessment;
 
-    return {
-      id: item.id,
-      title: assessment.title,
-      studentName: item.student.name,
-      studentSurname: item.student.surname,
-      teacherName: assessment.lesson.teacher.name,
-      teacherSurname: assessment.lesson.teacher.surname,
-      score: item.score,
-      className: assessment.lesson.class.name,
-      startTime: isExam ? assessment.startTime : (assessment as any).startDate,
-    };
-  }).filter(Boolean) as ResultList[];
+      return {
+        id: item.id,
+        title: assessment.title,
+        studentName: item.student.name,
+        studentSurname: item.student.surname,
+        teacherName: assessment.lesson.teacher.name,
+        teacherSurname: assessment.lesson.teacher.surname,
+        score: item.score,
+        className: assessment.lesson.class.name,
+        startTime: isExam
+          ? assessment.startTime
+          : (assessment as any).startDate,
+      };
+    })
+    .filter(Boolean) as ResultList[];
 
   const columns = [
     {
@@ -134,11 +158,11 @@ const ResultListPage = async ({
     },
     ...(role === "admin" || role === "teacher"
       ? [
-        {
-          header: "Actions",
-          accessor: "action",
-        },
-      ]
+          {
+            header: "Actions",
+            accessor: "action",
+          },
+        ]
       : []),
   ];
   const renderRow = (item: ResultList) => (

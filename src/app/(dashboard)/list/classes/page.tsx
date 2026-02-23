@@ -72,11 +72,11 @@ const ClassListPage = async ({
     },
     ...(role === "admin"
       ? [
-        {
-          header: "Actions",
-          accessor: "action",
-        },
-      ]
+          {
+            header: "Actions",
+            accessor: "action",
+          },
+        ]
       : []),
   ];
 
@@ -86,9 +86,7 @@ const ClassListPage = async ({
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-PurpleLight"
     >
       <td className="flex items-center gap-4 p-4">{item.name}</td>
-      <td className="hidden md:table-cell text-center">
-        {item.capacity}
-      </td>
+      <td className="hidden md:table-cell text-center">{item.capacity}</td>
       <td className="hidden md:table-cell text-center">{item.name}</td>
       <td className="hidden md:table-cell text-center">
         {`${item.supervisor?.name} ${item.supervisor.surname}`}
@@ -114,6 +112,7 @@ const ClassListPage = async ({
       renderRow={renderRow}
       data={data}
       page={p}
+      source="class"
     />
   );
 };

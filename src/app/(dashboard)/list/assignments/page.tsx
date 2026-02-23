@@ -1,9 +1,10 @@
+import { Assignment, Class, Prisma, Subject, Teacher } from "@prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
+
 import FormModal from "@/components/FormModal";
 import ListPageContainer from "@/components/ListPageContainer";
-import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/settings";
-import { currentUser } from "@clerk/nextjs/server";
-import { Assignment, Class, Prisma, Subject, Teacher } from "@prisma/client";
 import { getPageNumber } from "@/lib/queryUtils";
 
 type AssignmentList = Assignment & {
@@ -22,12 +23,9 @@ const AssignmentListPage = async ({
   const user = await currentUser();
   const role = user?.publicMetadata.role as string;
   const { page, ...queryParams } = searchParams;
-
   const p = getPageNumber(page);
-
-  const query: Prisma.AssignmentWhereInput = {
-    lesson: {},
-  };
+  const query: Prisma.AssignmentWhereInput = {};
+  query.lesson = {};
 
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
@@ -37,10 +35,10 @@ const AssignmentListPage = async ({
             (query.lesson as any).classId = parseInt(value);
             break;
           case "teacherId":
-            (query.lesson as any).teacherId = value;
+            query.lesson.teacherId = value;
             break;
           case "search":
-            (query.lesson as any).subject = {
+            query.lesson.subject = {
               name: { contains: value, mode: "insensitive" },
             };
             break;
@@ -49,6 +47,35 @@ const AssignmentListPage = async ({
         }
       }
     }
+  }
+
+  // Role Conditions
+  switch (role) {
+    case "admin":
+      break;
+    case "teacher":
+      query.lesson.teacherId = user?.id;
+      break;
+    case "student":
+      query.lesson.class = {
+        students: {
+          some: {
+            id: user?.id,
+          },
+        },
+      };
+      break;
+    case "parent":
+      query.lesson.class = {
+        students: {
+          some: {
+            parentId: user?.id,
+          },
+        },
+      };
+      break;
+    default:
+      break;
   }
 
   const [data, count] = await prisma.$transaction([
@@ -88,7 +115,7 @@ const AssignmentListPage = async ({
       accessor: "dueDate",
       className: "hidden md:table-cell",
     },
-    ...(role === "admin"
+    ...(role === "admin" || role === "teacher"
       ? [
           {
             header: "Actions",
@@ -97,6 +124,7 @@ const AssignmentListPage = async ({
         ]
       : []),
   ];
+
   const renderRow = (item: AssignmentList) => (
     <tr
       key={item.id}
@@ -113,17 +141,16 @@ const AssignmentListPage = async ({
         {new Intl.DateTimeFormat("en-US").format(item.dueDate)}
       </td>
 
-      {role === "admin" && (
+      {(role === "admin" || role === "teacher") && (
         <td>
           <div className="flex items-center justify-center gap-2">
             <FormModal table="assignment" type="update" data={item} />
             <FormModal table="assignment" type="delete" id={item.id} />
           </div>
-             </td>
+        </td>
       )}
     </tr>
-  ); 
-
+  );
   return (
     <ListPageContainer
       title="All Assignments"
@@ -134,6 +161,7 @@ const AssignmentListPage = async ({
       renderRow={renderRow}
       data={data}
       page={p}
+      source="assignment"
     />
   );
 };

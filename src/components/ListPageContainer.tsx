@@ -4,33 +4,41 @@ import Pagination from "./Pagination";
 import { ReactNode } from "react";
 
 type ListPageContainerProps = {
-    title: string;
-    count: number;
-    table: Parameters<typeof ListPageHeader>[0]["table"];
-    role: string | undefined;
-    columns: Parameters<typeof Table>[0]["columns"];
-    renderRow: Parameters<typeof Table>[0]["renderRow"];
-    data: any[];
-    page: number;
+  title: string;
+  count: number;
+  table: Parameters<typeof ListPageHeader>[0]["table"];
+  role: string | undefined;
+  columns: Parameters<typeof Table>[0]["columns"];
+  renderRow: Parameters<typeof Table>[0]["renderRow"];
+  data: any[];
+  page: number;
+  source?: string;
 };
 
 const ListPageContainer = ({
-    title,
-    count,
-    table,
-    role,
-    columns,
-    renderRow,
-    data,
-    page,
+  title,
+  count,
+  table,
+  role,
+  columns,
+  renderRow,
+  data,
+  page,
+  source = "",
 }: ListPageContainerProps) => {
-    return (
-        <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-            <ListPageHeader title={title} count={count} table={table} role={role} />
-            <Table columns={columns} renderRow={renderRow} data={data} />
-            <Pagination page={page} count={count} />
-        </div>
-    );
+  return (
+    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
+      <ListPageHeader
+        title={title}
+        count={count}
+        table={table}
+        role={role}
+        source={source}
+      />
+      <Table columns={columns} renderRow={renderRow} data={data} />
+      <Pagination page={page} count={count} />
+    </div>
+  );
 };
 
 export default ListPageContainer;
