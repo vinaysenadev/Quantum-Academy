@@ -1195,3 +1195,10 @@ export const menuItems = [
     ],
   },
 ];
+export const bgColors = [
+  "bg-SkyLight",
+  "bg-purple-100",
+  "bg-Purple",
+  "bg-Yellow",
+  "bg-SkyLight",
+];
