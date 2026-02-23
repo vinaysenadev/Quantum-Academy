@@ -3,12 +3,12 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { resultsData, role } from "@/lib/data";
+
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/settings";
+import { currentUser } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";
 import { Filter, Plus, SortAsc } from "lucide-react";
-import Image from "next/image";
 
 type ResultList = {
   id: number;
@@ -22,73 +22,13 @@ type ResultList = {
   startTime: Date;
 };
 
-const columns = [
-  {
-    header: "Subject Name",
-    accessor: "name",
-  },
-  {
-    header: "Student",
-    accessor: "student",
-  },
-  {
-    header: "Score",
-    accessor: "score",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Teacher",
-    accessor: "teacher",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Class",
-    accessor: "class",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Date",
-    accessor: "date",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Actions",
-    accessor: "action",
-  },
-];
-const renderRow = (item: ResultList) => (
-  <tr
-    key={item.id}
-    className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-PurpleLight"
-  >
-    <td className="flex items-center gap-4 p-4 text-center ">{item.title}</td>
-    <td className="text-center">{item.studentName + " " + item.studentName}</td>
-    <td className="hidden md:table-cell text-center">{item.score}</td>
-    <td className="hidden md:table-cell text-center">
-      {item.teacherName + " " + item.teacherSurname}
-    </td>
-    <td className="hidden md:table-cell text-center">{item.className}</td>
-    <td className="hidden md:table-cell text-center">
-      {new Intl.DateTimeFormat("en-US").format(item.startTime)}
-    </td>
-    <td>
-      <div className="flex items-center justify-center gap-2">
-        {(role === "teacher" || role === "admin") && (
-          <>
-            <FormModal table="result" type="update" data={item} />
-            <FormModal table="result" type="delete" id={item.id} />
-          </>
-        )}
-      </div>
-    </td>
-  </tr>
-);
-
 const ResultListPage = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
+  const user = await currentUser();
+  const role = user?.publicMetadata.role as string;
   const { page, ...queryParams } = searchParams;
 
   const p = page ? parseInt(page) : 1;
@@ -193,6 +133,74 @@ const ResultListPage = async ({
       startTime: isExam ? assessment.startTime : assessment.startDate,
     };
   });
+
+  const columns = [
+    {
+      header: "Subject Name",
+      accessor: "name",
+    },
+    {
+      header: "Student",
+      accessor: "student",
+    },
+    {
+      header: "Score",
+      accessor: "score",
+      className: "hidden md:table-cell",
+    },
+    {
+      header: "Teacher",
+      accessor: "teacher",
+      className: "hidden md:table-cell",
+    },
+    {
+      header: "Class",
+      accessor: "class",
+      className: "hidden md:table-cell",
+    },
+    {
+      header: "Date",
+      accessor: "date",
+      className: "hidden md:table-cell",
+    },
+    ...(role === "admin" || role === "teacher"
+      ? [
+          {
+            header: "Actions",
+            accessor: "action",
+          },
+        ]
+      : []),
+  ];
+  const renderRow = (item: ResultList) => (
+    <tr
+      key={item.id}
+      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-PurpleLight"
+    >
+      <td className="flex items-center gap-4 p-4 text-center ">{item.title}</td>
+      <td className="text-center">
+        {item.studentName + " " + item.studentName}
+      </td>
+      <td className="hidden md:table-cell text-center">{item.score}</td>
+      <td className="hidden md:table-cell text-center">
+        {item.teacherName + " " + item.teacherSurname}
+      </td>
+      <td className="hidden md:table-cell text-center">{item.className}</td>
+      <td className="hidden md:table-cell text-center">
+        {new Intl.DateTimeFormat("en-US").format(item.startTime)}
+      </td>
+      {(role === "teacher" || role === "admin") && (
+        <td>
+          <div className="flex items-center justify-center gap-2">
+            <>
+              <FormModal table="result" type="update" data={item} />
+              <FormModal table="result" type="delete" id={item.id} />
+            </>
+          </div>
+        </td>
+      )}
+    </tr>
+  );
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* TOP */}

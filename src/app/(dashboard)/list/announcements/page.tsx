@@ -14,26 +14,6 @@ import { Filter, Plus, SortAsc } from "lucide-react";
 
 type AnnouncementList = Announcement & { class: Class };
 
-const columns = [
-  {
-    header: "Title",
-    accessor: "title",
-  },
-  {
-    header: "Class",
-    accessor: "class",
-  },
-  {
-    header: "Date",
-    accessor: "date",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Actions",
-    accessor: "action",
-  },
-];
-
 const AnnouncementListPage = async ({
   searchParams,
 }: {
@@ -41,6 +21,29 @@ const AnnouncementListPage = async ({
 }) => {
   const user = await currentUser();
   const role = user?.publicMetadata.role as string;
+  const columns = [
+    {
+      header: "Title",
+      accessor: "title",
+    },
+    {
+      header: "Class",
+      accessor: "class",
+    },
+    {
+      header: "Date",
+      accessor: "date",
+      className: "hidden md:table-cell",
+    },
+    ...(role === "admin"
+      ? [
+          {
+            header: "Actions",
+            accessor: "action",
+          },
+        ]
+      : []),
+  ];
   const renderRow = (item: AnnouncementList) => (
     <tr
       key={item.id}
@@ -51,24 +54,20 @@ const AnnouncementListPage = async ({
       <td className="hidden md:table-cell text-center">
         {new Intl.DateTimeFormat("en-US").format(item.date)}
       </td>
-      <td>
-        <div className="flex items-center justify-center gap-2">
-          {role === "admin" && (
-            <>
-              <FormModal table="announcement" type="update" data={item} />
-              <FormModal table="announcement" type="delete" id={item.id} />
-            </>
-          )}
-        </div>
-      </td>
+
+      {role === "admin" && (
+        <td>
+          <div className="flex items-center justify-center gap-2">
+            <FormModal table="announcement" type="update" data={item} />
+            <FormModal table="announcement" type="delete" id={item.id} />
+          </div>
+        </td>
+      )}
     </tr>
   );
 
   const { page, ...queryParams } = searchParams;
-
   const p = page ? parseInt(page) : 1;
-
-  // URL PARAMS CONDITION
 
   const query: Prisma.AnnouncementWhereInput = {};
 
