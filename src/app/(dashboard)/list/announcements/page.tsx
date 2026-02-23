@@ -1,14 +1,16 @@
 // import FormModal from "@/components/FormModal";
+
 import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { announcementsData, role } from "@/lib/data";
+
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/settings";
+import { currentUser } from "@clerk/nextjs/server";
+
 import { Announcement, Class, Prisma } from "@prisma/client";
 import { Filter, Plus, SortAsc } from "lucide-react";
-import Image from "next/image";
 
 type AnnouncementList = Announcement & { class: Class };
 
@@ -37,6 +39,8 @@ const AnnouncementListPage = async ({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
+  const user = await currentUser();
+  const role = user?.publicMetadata.role as string;
   const renderRow = (item: AnnouncementList) => (
     <tr
       key={item.id}

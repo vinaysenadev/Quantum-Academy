@@ -20,7 +20,7 @@ import {
   CalendarCheck,
 } from "lucide-react";
 
-export let role = "admin";
+export let role = "teacher";
 
 export const teachersData = [
   {

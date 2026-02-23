@@ -70,7 +70,7 @@ const renderRow = (item: StudentList) => (
     <td className="hidden md:table-cell">{item.phone}</td>
     <td className="hidden md:table-cell">{item.address}</td>
     <td>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-center gap-2">
         <Link href={`/list/students/${item.id}`}>
           <button className="button-rounded bg-Purple">
             <View className="icon" />
@@ -136,7 +136,7 @@ const StudentListPage = async ({
       {/* TOP */}
       <div className="flex items-center justify-between">
         <h1 className="hidden md:block text-lg font-semibold">
-          All Students ({})
+          All Students ({count})
         </h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
