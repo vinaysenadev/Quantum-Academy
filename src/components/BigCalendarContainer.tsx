@@ -1,5 +1,6 @@
-import prisma from "@/lib/prisma";
 import React from "react";
+
+import prisma from "@/lib/prisma";
 import BigCalendar from "./BigCalendar";
 
 const BigCalendarContainer = async ({
@@ -23,9 +24,9 @@ const BigCalendarContainer = async ({
     start: lesson.startTime,
     end: lesson.endTime,
   }));
-  console.log(data, "big calendar");
+
   return (
-    <div className="">
+    <div className="h-full">
       <BigCalendar data={data} />
     </div>
   );

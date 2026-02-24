@@ -1,10 +1,7 @@
 "use client";
-import { MoreHorizontal } from "lucide-react";
-import Image from "next/image";
 import {
   BarChart,
   Bar,
-  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -49,41 +46,45 @@ const AttendanceChart = () => {
         <XAxis
           dataKey="name"
           axisLine={false}
-          tick={{ fill: "#d1d5db", fontSize: "14px" }}
+          tick={{ fill: "#9ca3af", fontSize: "12px" }}
           tickLine={false}
         />
         <YAxis
           axisLine={false}
-          tick={{ fill: "#d1d5db", fontSize: "14px" }}
+          tick={{ fill: "#9ca3af", fontSize: "12px" }}
           tickLine={false}
         />
         <Tooltip
           contentStyle={{
             borderRadius: "10px",
             borderColor: "lightgray",
-            fontSize: "14px",
+            fontSize: "12px",
+            boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
           }}
         />
         <Legend
           align="left"
           verticalAlign="top"
           wrapperStyle={{
-            paddingTop: "20px",
-            paddingBottom: "40px",
-            fontSize: "14px",
+            paddingTop: "10px",
+            paddingBottom: "30px",
+            fontSize: "13px",
+            fontWeight: "500",
           }}
         />
         <Bar
           dataKey="present"
           fill="#FAE27C"
           legendType="circle"
-          radius={[10, 10, 0, 0]}
+          radius={[4, 4, 0, 0]}
+          name="Present"
         />
         <Bar
           dataKey="absent"
           fill="#C3EBFA"
           legendType="circle"
-          radius={[10, 10, 0, 0]}
+          radius={[4, 4, 0, 0]}
+          name="Absent"
         />
       </BarChart>
     </ResponsiveContainer>

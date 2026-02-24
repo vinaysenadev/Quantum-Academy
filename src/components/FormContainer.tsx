@@ -1,6 +1,8 @@
 import React from "react";
-import FormModal from "./FormModal";
+
 import prisma from "@/lib/prisma";
+import FormModal from "./FormModal";
+
 export type FormContainerProps = {
   table:
     | "teacher"
@@ -50,9 +52,7 @@ const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
         break;
     }
   }
-  console.log("------data form container-----");
-  console.log(data, relatedData);
-  console.log("------data form container-----");
+
   return (
     <FormModal
       table={table}

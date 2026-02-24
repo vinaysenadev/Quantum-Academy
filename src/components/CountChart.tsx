@@ -1,12 +1,7 @@
 "use client";
-import { MoreHorizontal } from "lucide-react";
+
 import Image from "next/image";
-import {
-  RadialBarChart,
-  RadialBar,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { RadialBarChart, RadialBar, ResponsiveContainer } from "recharts";
 
 const CountChart = ({ boys, girls }: { boys: number; girls: number }) => {
   const data = [
@@ -26,8 +21,13 @@ const CountChart = ({ boys, girls }: { boys: number; girls: number }) => {
       fill: "#C3EBFA",
     },
   ];
+
   return (
-    <div className="relative w-full h-[75%]">
+    <div
+      className="relative w-full h-[75%]"
+      role="img"
+      aria-label={`Student distribution: ${boys} boys and ${girls} girls`}
+    >
       <ResponsiveContainer>
         <RadialBarChart
           cx="50%"
@@ -42,7 +42,7 @@ const CountChart = ({ boys, girls }: { boys: number; girls: number }) => {
       </ResponsiveContainer>
       <Image
         src="/maleFemale.png"
-        alt=""
+        alt="Gender distribution icon"
         width={50}
         height={50}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"

@@ -16,25 +16,39 @@ const Table = ({
   data: any[];
 }) => {
   return (
-    <div className="overflow-hidden rounded-lg border my-4 border-gray-300">
-      <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
-        <thead className="bg-[#C3EBFA]">
-          <tr className="text-gray-500  text-sm px-2">
-            {columns.map((column, i) => {
-              return (
-                <th
-                  key={column.accessor}
-                  className={`px-2  py-2.5  ${
-                    i > 0 ? "text-center" : "text-left"
-                  } ${column.className}`}
-                >
-                  {column.header}
-                </th>
-              );
-            })}
+    <div className="w-full overflow-x-auto rounded-xl border border-gray-100 shadow-sm">
+      <table className="w-full text-left border-collapse">
+        <thead className="bg-SkyLight">
+          <tr>
+            {columns.map((column, i) => (
+              <th
+                key={column.accessor}
+                scope="col"
+                className={`px-4 py-4 text-xs font-bold uppercase tracking-wider text-gray-600 ${
+                  i > 0 && !column.className?.includes("text-left")
+                    ? "text-center"
+                    : "text-left"
+                } ${column.className || ""}`}
+              >
+                {column.header}
+              </th>
+            ))}
           </tr>
         </thead>
-        <tbody>{data.map((item) => renderRow(item))}</tbody>
+        <tbody className="bg-white divide-y divide-gray-100">
+          {data.length > 0 ? (
+            data.map((item) => renderRow(item))
+          ) : (
+            <tr>
+              <td
+                colSpan={columns.length}
+                className="px-4 py-10 text-center text-gray-400 italic"
+              >
+                No data available.
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
     </div>
   );

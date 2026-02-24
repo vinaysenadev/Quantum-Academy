@@ -1,7 +1,8 @@
-import React from "react";
-import AttendanceChart from "./AttendanceChart";
 import { MoreHorizontal } from "lucide-react";
+import React from "react";
+
 import prisma from "@/lib/prisma";
+import AttendanceChart from "./AttendanceChart";
 
 const AttendanceChartContainer = async () => {
   const today = new Date();
@@ -23,12 +24,16 @@ const AttendanceChartContainer = async () => {
     },
   });
 
-  console.log(data);
   return (
-    <div className="bg-white rounded-lg p-4 h-full">
-      <div className="flex justify-between items-center">
-        <h1 className="text-md font-semibold">Attendance</h1>
-        <MoreHorizontal className="text-gray-400" />
+    <div className="bg-white rounded-xl p-4 h-full shadow-sm">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-lg font-semibold text-gray-800">Attendance</h1>
+        <button
+          className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+          aria-label="More attendance options"
+        >
+          <MoreHorizontal className="text-gray-400 size-5" aria-hidden="true" />
+        </button>
       </div>
       <AttendanceChart />
     </div>

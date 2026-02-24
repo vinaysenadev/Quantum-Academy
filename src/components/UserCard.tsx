@@ -1,6 +1,8 @@
-import prisma from "@/lib/prisma";
 import Image from "next/image";
 import React from "react";
+
+import prisma from "@/lib/prisma";
+import { MoreHorizontal } from "lucide-react";
 
 const UserCard = async ({
   type,
@@ -15,16 +17,32 @@ const UserCard = async ({
   };
 
   const data = await modelMap[type].count();
+
+  const label = `${type.charAt(0).toUpperCase() + type.slice(1)}s`;
+
   return (
-    <div className="rounded-md odd:bg-Purple even:bg-Yellow p-4 flex-1 min-w-[130px]">
+    <div
+      className="rounded-xl odd:bg-Purple even:bg-Yellow p-4 flex-1 min-w-[130px] shadow-sm hover:shadow-md transition-shadow group"
+      role="region"
+      aria-label={`Total ${label}: ${data}`}
+    >
       <div className="flex justify-between items-center">
-        <span className="text-[10px] bg-white px-2 py-1 rounded-full text-green-600">
+        <span className="text-[10px] bg-white px-2 py-0.5 rounded-full text-gray-500 font-bold border border-gray-100">
           2024/25
         </span>
-        <Image src="/more.png" alt="more" width={20} height={20} />
+        <button
+          className="p-1 hover:bg-white/50 rounded-full transition-colors"
+          aria-label={`More information about ${label}`}
+        >
+          {/* <MoreHorizontal className="text-gray-500" /> */}
+        </button>
       </div>
-      <h1 className="text-2xl font-semibold my-4">{data}</h1>
-      <h2 className="capitalize text-sm font-medium text-gray-600">{type}s</h2>
+      <div className="mt-4">
+        <h1 className="text-3xl font-bold text-gray-800">{data}</h1>
+        <h2 className="capitalize text-sm font-semibold text-gray-500 mt-1">
+          {label}
+        </h2>
+      </div>
     </div>
   );
 };

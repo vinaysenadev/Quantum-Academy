@@ -1,6 +1,8 @@
+import { currentUser } from "@clerk/nextjs/server";
+import Link from "next/link";
+
 import { bgColors } from "@/lib/data";
 import prisma from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs/server";
 
 const Announcements = async () => {
   const user = await currentUser();
@@ -26,59 +28,51 @@ const Announcements = async () => {
       date: "desc",
     },
   });
-  console.log(data, "Announcements");
 
   return (
-    <div className="bg-white p-4 rounded-md">
-      <div className="flex items-center justify-between">
-        <h1 className="text-md font-semibold">Announcements</h1>
-        <span className="text-xs text-gray-400">View All</span>
+    <div className="bg-white p-4 rounded-md shadow-sm">
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-lg font-semibold">Announcements</h1>
+        <Link
+          href="/list/announcements"
+          className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+          aria-label="View all announcements"
+        >
+          View All
+        </Link>
       </div>
-      <div className="flex flex-col gap-4 mt-4">
-        {data.map((announcement, index) => {
-          console.log(index, bgColors[index % bgColors.length]);
-          return (
+      <div
+        className="flex flex-col gap-4"
+        role="list"
+        aria-label="Recent Announcements"
+      >
+        {data.length > 0 ? (
+          data.map((announcement, index) => (
             <div
-              key={index}
+              key={announcement.id}
               className={`${bgColors[index % bgColors.length]} rounded-md p-4`}
+              role="listitem"
             >
               <div className="flex items-center justify-between">
                 <h2 className="font-medium">{announcement.title}</h2>
-                <span className="text-xs text-gray-400 bg-white rounded-md px-1 py-1">
-                  {announcement.date.toLocaleDateString("en-US")}
+                <span className="text-xs text-gray-500 bg-white/80 rounded-md px-2 py-1">
+                  {announcement.date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </span>
               </div>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-gray-600 mt-2 line-clamp-2">
                 {announcement.description}
               </p>
             </div>
-          );
-        })}
-
-        {/* <div className="bg-PurpleLight rounded-md p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-medium">Lorem ipsum dolor sit</h2>
-            <span className="text-xs text-gray-400 bg-white rounded-md px-1 py-1">
-              2025-01-01
-            </span>
-          </div>
-          <p className="text-sm text-gray-400 mt-1">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum,
-            expedita. Rerum, quidem facilis?
+          ))
+        ) : (
+          <p className="text-center text-gray-500 py-4">
+            No announcements found.
           </p>
-        </div>
-        <div className="bg-YellowLight rounded-md p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-medium">Lorem ipsum dolor sit</h2>
-            <span className="text-xs text-gray-400 bg-white rounded-md px-1 py-1">
-              2025-01-01
-            </span>
-          </div>
-          <p className="text-sm text-gray-400 mt-1">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum,
-            expedita. Rerum, quidem facilis?
-          </p>
-        </div> */}
+        )}
       </div>
     </div>
   );

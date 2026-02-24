@@ -137,7 +137,6 @@ const EventListPage = async ({
       renderRow={renderRow}
       data={data}
       page={p}
-      source="event"
     />
   );
 };

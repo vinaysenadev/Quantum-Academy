@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useTransition } from "react";
 
 const TableSearch = () => {
   const router = useRouter();
@@ -14,8 +14,14 @@ const TableSearch = () => {
     const formData = new FormData(e.currentTarget);
     const value = formData.get("search") as string;
 
-    const params = new URLSearchParams();
-    if (value) params.set("search", value);
+    const params = new URLSearchParams(window.location.search);
+    if (value) {
+      params.set("search", value);
+    } else {
+      params.delete("search");
+    }
+    // Reset to page 1 on search
+    params.set("page", "1");
 
     startTransition(() => {
       router.push(`${window.location.pathname}?${params.toString()}`);
@@ -23,30 +29,39 @@ const TableSearch = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
       {isPending && (
-        <>
-          <span className="text-sm text-gray-400">
-            Fetching search results...
-          </span>
-          <div className="w-4 h-4 border-2 border-gray-300 border-t-Purple rounded-full animate-spin" />
-        </>
+        <div
+          className="flex items-center gap-2"
+          role="status"
+          aria-live="polite"
+        >
+          <div
+            className="w-6 h-6 border-2 border-purple-700/30 border-t-purple-700 rounded-full animate-spin"
+            aria-hidden="true"
+          />
+          <span className="text-md text-gray-400">Searching...</span>
+        </div>
       )}
       <form
         onSubmit={handleSubmit}
-        className="w-full md:w-auto flex items-center gap-2 text-xs rounded-full ring-[1.5px] ring-gray-300 px-3 py-1.5"
+        className="w-full md:w-auto flex items-center gap-2 bg-gray-50 text-sm rounded-full ring-[1.5px] ring-gray-200 px-4 py-2 focus-within:ring-Sky transition-all"
+        role="search"
       >
-        <Search className="icon" />
-
+        <Search className="size-4 text-gray-400" aria-hidden="true" />
+        <label htmlFor="table-search" className="sr-only">
+          Search the table
+        </label>
         <input
+          id="table-search"
           type="text"
           name="search"
           placeholder="Search..."
-          className="w-[200px] bg-transparent outline-none"
+          className="w-full md:w-[200px] bg-transparent outline-none text-gray-700"
           disabled={isPending}
         />
       </form>
-    </>
+    </div>
   );
 };
 

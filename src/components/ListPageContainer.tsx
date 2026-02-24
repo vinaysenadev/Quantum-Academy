@@ -1,8 +1,10 @@
-import ListPageHeader from "./ListPageHeader";
-import Table from "./Table";
-import Pagination from "./Pagination";
 import { ReactNode } from "react";
+import React from "react";
+
 import FormContainer from "./FormContainer";
+import ListPageHeader from "./ListPageHeader";
+import Pagination from "./Pagination";
+import Table from "./Table";
 
 type ListPageContainerProps = {
   title: string;
@@ -26,13 +28,19 @@ const ListPageContainer = ({
   page,
 }: ListPageContainerProps) => {
   return (
-    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
+    <main className="bg-white p-4 rounded-xl flex-1 m-4 mt-0 shadow-sm">
       <ListPageHeader title={title} count={count} table={table} role={role}>
         {role === "admin" && <FormContainer table={table} type="create" />}
       </ListPageHeader>
-      <Table columns={columns} renderRow={renderRow} data={data} />
-      <Pagination page={page} count={count} />
-    </div>
+
+      <div className="mt-4">
+        <Table columns={columns} renderRow={renderRow} data={data} />
+      </div>
+
+      <footer className="mt-4 border-t border-gray-100 pt-4">
+        <Pagination page={page} count={count} />
+      </footer>
+    </main>
   );
 };
 

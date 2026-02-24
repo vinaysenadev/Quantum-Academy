@@ -1,3 +1,4 @@
+import React from "react";
 import { FieldError } from "react-hook-form";
 
 type InputFieldProps = {
@@ -26,7 +27,7 @@ const InputField = ({
       <div className="flex gap-2">
         <label className="text-xs text-gray-700">{!hidden && label}</label>
         {error?.message && (
-          <p className="text-xs font-semibold text-red-400">
+          <p className="text-xs font-semibold text-red-400" role="alert">
             ( {error.message.toString()} )
           </p>
         )}
@@ -38,6 +39,8 @@ const InputField = ({
         {...inputProps}
         defaultValue={defaultValue}
         hidden={hidden}
+        aria-invalid={error ? "true" : "false"}
+        aria-describedby={error ? error.message : undefined}
       />
     </div>
   );

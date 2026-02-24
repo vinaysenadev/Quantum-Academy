@@ -1,9 +1,15 @@
 "use server";
 
 import { clerkClient } from "@clerk/nextjs/server";
+
 import { ClassSchema, SubjectSchema, TeacherSchema } from "./formValidationSchema";
 import prisma from "./prisma";
+
 type CurrentState = { success: boolean; error: boolean };
+
+/**
+ * Subject Actions
+ */
 export const createSubject = async (
   currentState: CurrentState,
   data: SubjectSchema
@@ -12,17 +18,15 @@ export const createSubject = async (
     await prisma.subject.create({
       data: {
         name: data.name,
-        teachers:{
-            connect:data.teachers.map((teacherId)=>{
-                return {id:teacherId}
-            })
-        }
+        teachers: {
+          connect: data.teachers.map((teacherId) => ({ id: teacherId })),
+        },
       },
     });
- 
+
     return { success: true, error: false };
   } catch (error) {
-    console.log(error);
+    console.error("CREATE_SUBJECT_ERROR:", error);
     return { success: false, error: true };
   }
 };
@@ -31,21 +35,20 @@ export const updateSubject = async (
   currentState: CurrentState,
   data: SubjectSchema
 ) => {
-    console.log(data, "UPDATE")
   try {
     await prisma.subject.update({
-      where:{id:data.id},
+      where: { id: data.id },
       data: {
         name: data.name,
-        teachers:{
-            set:data.teachers.map((teacherId)=>({id:teacherId}))            
-        }
+        teachers: {
+          set: data.teachers.map((teacherId) => ({ id: teacherId })),
+        },
       },
     });
- 
+
     return { success: true, error: false };
   } catch (error) {
-    console.log(error);
+    console.error("UPDATE_SUBJECT_ERROR:", error);
     return { success: false, error: true };
   }
 };
@@ -54,21 +57,22 @@ export const deleteSubject = async (
   currentState: CurrentState,
   data: FormData
 ) => {
-   const id = data.get("id") as string;
-   console.log("DELETE SUBJECT", id)
+  const id = data.get("id") as string;
   try {
     await prisma.subject.delete({
-      where:{id:parseInt(id)}    
+      where: { id: parseInt(id) },
     });
- 
+
     return { success: true, error: false };
   } catch (error) {
-    console.log(error);
+    console.error("DELETE_SUBJECT_ERROR:", error);
     return { success: false, error: true };
   }
 };
 
-// Class actions
+/**
+ * Class Actions
+ */
 export const createClass = async (
   currentState: CurrentState,
   data: ClassSchema
@@ -80,7 +84,7 @@ export const createClass = async (
 
     return { success: true, error: false };
   } catch (error) {
-    console.log(error);
+    console.error("CREATE_CLASS_ERROR:", error);
     return { success: false, error: true };
   }
 };
@@ -89,16 +93,15 @@ export const updateClass = async (
   currentState: CurrentState,
   data: ClassSchema
 ) => {
-    console.log(data, "UPDATE")
   try {
     await prisma.class.update({
-      where:{id:data.id},
+      where: { id: data.id },
       data,
     });
- 
+
     return { success: true, error: false };
   } catch (error) {
-    console.log(error);
+    console.error("UPDATE_CLASS_ERROR:", error);
     return { success: false, error: true };
   }
 };
@@ -107,22 +110,22 @@ export const deleteClass = async (
   currentState: CurrentState,
   data: FormData
 ) => {
-   const id = data.get("id") as string;
-   console.log("DELETE CLASS", id)
+  const id = data.get("id") as string;
   try {
     await prisma.class.delete({
-      where:{id:parseInt(id)}    
+      where: { id: parseInt(id) },
     });
- 
+
     return { success: true, error: false };
   } catch (error) {
-    console.log(error);
+    console.error("DELETE_CLASS_ERROR:", error);
     return { success: false, error: true };
   }
 };
 
-
-// Teacher actions
+/**
+ * Teacher Actions
+ */
 export const createTeacher = async (
   currentState: CurrentState,
   data: TeacherSchema
@@ -133,7 +136,7 @@ export const createTeacher = async (
       password: data.password,
       firstName: data.name,
       lastName: data.surname,
-      publicMetadata:{role:"teacher"}
+      publicMetadata: { role: "teacher" },
     });
 
     await prisma.teacher.create({
@@ -157,10 +160,9 @@ export const createTeacher = async (
       },
     });
 
-    // revalidatePath("/list/teachers");
     return { success: true, error: false };
   } catch (err) {
-    console.log(err);
+    console.error("CREATE_TEACHER_ERROR:", err);
     return { success: false, error: true };
   }
 };
@@ -169,21 +171,18 @@ export const updateTeacher = async (
   currentState: CurrentState,
   data: TeacherSchema
 ) => {
-  if (!data.id) {
-    return { success: false, error: true };
-  }
+  if (!data.id) return { success: false, error: true };
+
   try {
-    const user = await clerkClient.users.updateUser(data.id, {
+    await clerkClient.users.updateUser(data.id, {
       username: data.username,
       ...(data.password !== "" && { password: data.password }),
       firstName: data.name,
       lastName: data.surname,
     });
-    console.log("data--******", data)
+
     await prisma.teacher.update({
-      where: {
-        id: data.id,
-      },
+      where: { id: data.id },
       data: {
         ...(data.password !== "" && { password: data.password }),
         username: data.username,
@@ -203,31 +202,28 @@ export const updateTeacher = async (
         },
       },
     });
-    // revalidatePath("/list/teachers");
+
     return { success: true, error: false };
   } catch (err) {
-    console.log(err);
+    console.error("UPDATE_TEACHER_ERROR:", err);
     return { success: false, error: true };
   }
 };
+
 export const deleteTeacher = async (
   currentState: CurrentState,
   data: FormData
 ) => {
   const id = data.get("id") as string;
   try {
-   const clerkResponse = await clerkClient.users.deleteUser(id);
-   console.log("clerkResponse", clerkResponse)
+    await clerkClient.users.deleteUser(id);
     await prisma.teacher.delete({
-      where: {
-        id: id,
-      },
+      where: { id: id },
     });
 
-    // revalidatePath("/list/teachers");
     return { success: true, error: false };
   } catch (err) {
-    console.log(err);
+    console.error("DELETE_TEACHER_ERROR:", err);
     return { success: false, error: true };
   }
 };
