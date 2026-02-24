@@ -9,7 +9,8 @@ type ListPageHeaderProps = {
   count: number;
   table: Parameters<typeof FormModal>[0]["table"];
   role: string | undefined;
-  source: string;
+
+  children?: React.ReactNode;
 };
 
 const ListPageHeader = ({
@@ -17,7 +18,7 @@ const ListPageHeader = ({
   count,
   table,
   role,
-  source,
+  children,
 }: ListPageHeaderProps) => {
   return (
     <div className="flex items-center justify-between">
@@ -33,7 +34,7 @@ const ListPageHeader = ({
           <button className="button-rounded">
             <SortAsc className="icon" />
           </button>
-          {role === "admin" && <FormModal table={table} type="create" />}
+          {children}
         </div>
       </div>
     </div>

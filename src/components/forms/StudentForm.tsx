@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Dispatch, SetStateAction } from "react";
 import { z } from "zod";
 import InputField from "../InputField";
 import Image from "next/image";
@@ -27,7 +28,7 @@ const schema = z.object({
     .any()
     .refine(
       (file) => typeof window !== "undefined" && file instanceof File,
-      "Image is required"
+      "Image is required",
     ),
 });
 
@@ -36,9 +37,13 @@ type Inputs = z.infer<typeof schema>;
 const StudentForm = ({
   type,
   data,
+  setOpen,
+  relatedData,
 }: {
   type: "create" | "update";
   data?: any;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  relatedData?: any;
 }) => {
   const {
     register,

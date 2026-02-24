@@ -1,22 +1,83 @@
 "use client";
 
+import { deleteClass, deleteSubject, deleteTeacher } from "@/lib/actions";
 import { Plus, Edit, Trash2, X, TriangleAlert } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-// import TeacherForm from "./forms/TeacherForm";
-// import StudentForm from "./forms/StudentForm";
+import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
+import type { FormContainerProps } from "./FormContainer";
+
+const deleteActionMap = {
+  subject: deleteSubject,
+  class: deleteClass,
+  teacher: deleteTeacher,
+  student: deleteSubject,
+  exam: deleteSubject,
+  // other actions
+  parent: deleteSubject,
+  lesson: deleteSubject,
+  assignment: deleteSubject,
+  result: deleteSubject,
+  attendance: deleteSubject,
+  event: deleteSubject,
+  announcement: deleteSubject,
+};
+
 const TeacherForm = dynamic(() => import("./forms/TeacherForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 const StudentForm = dynamic(() => import("./forms/StudentForm"), {
   loading: () => <h1>Loading...</h1>,
 });
+const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const ClassForm = dynamic(() => import("./forms/ClassForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
 
 const forms: {
-  [key: string]: (type: "create" | "update", data?: any) => JSX.Element;
+  [key: string]: (
+    setOpen: Dispatch<SetStateAction<boolean>>,
+    type: "create" | "update",
+    data?: any,
+    relatedData?: any,
+  ) => JSX.Element;
 } = {
-  teacher: (type, data) => <TeacherForm type={type} data={data} />,
-  student: (type, data) => <StudentForm type={type} data={data} />,
+  teacher: (setOpen, type, data, relatedData) => (
+    <TeacherForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relatedData={relatedData}
+    />
+  ),
+  // student: (setOpen, type, data, relatedData) => (
+  //   <StudentForm
+  //     type={type}
+  //     data={data}
+  //     setOpen={setOpen}
+  //     relatedData={relatedData}
+  //   />
+  // ),
+  subject: (setOpen, type, data, relatedData) => (
+    <SubjectForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relatedData={relatedData}
+    />
+  ),
+  class: (setOpen, type, data, relatedData) => (
+    <ClassForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relatedData={relatedData}
+    />
+  ),
 };
 
 const FormModal = ({
@@ -24,24 +85,8 @@ const FormModal = ({
   type,
   data,
   id,
-}: {
-  table:
-    | "teacher"
-    | "student"
-    | "parent"
-    | "subject"
-    | "class"
-    | "lesson"
-    | "exam"
-    | "assignment"
-    | "result"
-    | "attendance"
-    | "event"
-    | "announcement";
-  type: "create" | "update" | "delete";
-  data?: any;
-  id?: string | number;
-}) => {
+  relatedData,
+}: FormContainerProps & { relatedData?: any }) => {
   const [open, setOpen] = useState(false);
 
   // ESC key close
@@ -54,16 +99,37 @@ const FormModal = ({
   }, []);
 
   const Form = () => {
+    const router = useRouter();
+    const [state, formAction] = useFormState(deleteActionMap[table], {
+      success: false,
+      error: false,
+    });
+
+    useEffect(() => {
+      if (state.success) {
+        const tableName = table.charAt(0).toUpperCase() + table.slice(1);
+        if (type === "delete") {
+          toast(`${tableName} has been deleted successfully!`);
+        } else {
+          toast(
+            `${tableName} has been ${type === "create" ? "created" : "updated"} successfully!`,
+          );
+        }
+        router.refresh();
+      }
+    }, [state, type, setOpen]);
+
     return type === "delete" && id ? (
-      <form action="">
+      <form action={formAction}>
         <div className="flex flex-col justify-center items-center h-[90vh] gap-4">
           <TriangleAlert className="icon size-40 text-[#FFC107]" />
           <span className="text-xl text-center">
             All data will be lost. Are you sure you want to delete this {table}?
           </span>
+          <input type="text | number" name="id" value={id} hidden />
           <button
             className="text-white bg-red-500 w-full p-3 rounded-md"
-            onClick={() => setOpen(false)}
+            type="submit"
           >
             Delete
           </button>
@@ -71,7 +137,7 @@ const FormModal = ({
       </form>
     ) : type === "create" || type === "update" ? (
       forms[table] ? (
-        forms[table](type, data)
+        forms[table](setOpen, type, data, relatedData)
       ) : (
         <p>No form available for {table}</p>
       )
@@ -87,8 +153,8 @@ const FormModal = ({
           type === "create"
             ? "button-rounded"
             : type === "delete"
-            ? "button-rounded-delete"
-            : "button-rounded-purple"
+              ? "button-rounded-delete"
+              : "button-rounded-purple"
         }
         onClick={() => setOpen(true)}
       >

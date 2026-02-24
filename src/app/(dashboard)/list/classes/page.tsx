@@ -5,6 +5,7 @@ import { ITEMS_PER_PAGE } from "@/lib/settings";
 import { currentUser } from "@clerk/nextjs/server";
 import { Class, Prisma, Teacher } from "@prisma/client";
 import { getPageNumber } from "@/lib/queryUtils";
+import FormContainer from "@/components/FormContainer";
 
 type ClassList = Class & { supervisor: Teacher };
 
@@ -87,15 +88,15 @@ const ClassListPage = async ({
     >
       <td className="flex items-center gap-4 p-4">{item.name}</td>
       <td className="hidden md:table-cell text-center">{item.capacity}</td>
-      <td className="hidden md:table-cell text-center">{item.name}</td>
+      <td className="hidden md:table-cell text-center">{item.gradeId}</td>
       <td className="hidden md:table-cell text-center">
-        {`${item.supervisor?.name} ${item.supervisor.surname}`}
+        {`${item?.supervisor?.name} ${item?.supervisor?.surname}`}
       </td>
       {role === "admin" && (
         <td>
           <div className="flex items-center justify-center gap-2">
-            <FormModal table="class" type="update" data={item} />
-            <FormModal table="class" type="delete" id={item.id} />
+            <FormContainer table="class" type="update" data={item} />
+            <FormContainer table="class" type="delete" id={item.id} />
           </div>
         </td>
       )}
@@ -112,7 +113,6 @@ const ClassListPage = async ({
       renderRow={renderRow}
       data={data}
       page={p}
-      source="class"
     />
   );
 };

@@ -11,6 +11,7 @@ import { View } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getPageNumber } from "@/lib/queryUtils";
+import FormContainer from "@/components/FormContainer";
 
 type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
 
@@ -93,11 +94,11 @@ const TeacherListPage = async ({
     },
     ...(role === "admin" || role === "teacher"
       ? [
-        {
-          header: "Actions",
-          accessor: "action",
-        },
-      ]
+          {
+            header: "Actions",
+            accessor: "action",
+          },
+        ]
       : []),
   ];
 
@@ -143,7 +144,7 @@ const TeacherListPage = async ({
             </button>
           </Link>
           {role === "admin" && (
-            <FormModal table="teacher" type="delete" id={item.id} />
+            <FormContainer table="teacher" type="delete" id={item.id} />
           )}
         </div>
       </td>

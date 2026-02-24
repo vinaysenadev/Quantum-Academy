@@ -1,10 +1,12 @@
-import FormModal from "@/components/FormModal";
-import ListPageContainer from "@/components/ListPageContainer";
 import prisma from "@/lib/prisma";
-import { ITEMS_PER_PAGE } from "@/lib/settings";
 import { currentUser } from "@clerk/nextjs/server";
 import { Prisma, Subject, Teacher } from "@prisma/client";
+
+import { ITEMS_PER_PAGE } from "@/lib/settings";
+import FormModal from "@/components/FormModal";
+import ListPageContainer from "@/components/ListPageContainer";
 import { getPageNumber } from "@/lib/queryUtils";
+import FormContainer from "@/components/FormContainer";
 
 type SubjectList = Subject & { teachers: Teacher[] };
 
@@ -61,11 +63,11 @@ const SubjectListPage = async ({
     },
     ...(role === "admin"
       ? [
-        {
-          header: "Actions",
-          accessor: "action",
-        },
-      ]
+          {
+            header: "Actions",
+            accessor: "action",
+          },
+        ]
       : []),
   ];
   const renderRow = (item: SubjectList) => (
@@ -81,8 +83,8 @@ const SubjectListPage = async ({
         <td>
           <div className="flex items-center justify-center gap-2 ">
             <>
-              <FormModal table="subject" type="update" data={item} />
-              <FormModal table="subject" type="delete" id={item.id} />
+              <FormContainer table="subject" type="update" data={item} />
+              <FormContainer table="subject" type="delete" id={item.id} />
             </>
           </div>
         </td>

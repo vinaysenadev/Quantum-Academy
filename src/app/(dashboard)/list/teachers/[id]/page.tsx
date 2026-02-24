@@ -1,18 +1,45 @@
 import Announcements from "@/components/Announcements";
-import BigCalendar from "@/components/BigCalendar";
+
+import BigCalendarContainer from "@/components/BigCalendarContainer";
+import FormContainer from "@/components/FormContainer";
 import Performance from "@/components/Performance";
 // import BigCalendar from "@/components/BigCalender";
 // import FormModal from "@/components/FormModal";
 // import Performance from "@/components/Performance";
-import { role } from "@/lib/data";
+
+import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
+import { Teacher } from "@prisma/client";
 import { Calendar, Mail, Phone, Syringe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-const SingleTeacherPage = () => {
-  const teacher = {
-    id: "teacher1",
-  };
+const SingleTeacherPage = async ({ params }: { params: { id: string } }) => {
+  const user = await currentUser();
+  const role = user?.publicMetadata.role as string;
+  const teacher:
+    | (Teacher & {
+        _count: { subjects: number; lessons: number; classes: number };
+      })
+    | null = await prisma.teacher.findUnique({
+    where: {
+      id: params.id,
+    },
+    include: {
+      subjects: true,
+      _count: {
+        select: {
+          subjects: true,
+          lessons: true,
+          classes: true,
+        },
+      },
+    },
+  });
+  if (!teacher) {
+    return <div>Teacher not found</div>;
+  }
+  console.log("****---------", teacher, "TEACHER-------");
   return (
     <div className="flex-1 p-4 flex flex-col gap-4 xl:flex-row">
       {/* LEFT */}
@@ -23,7 +50,13 @@ const SingleTeacherPage = () => {
           <div className="bg-Sky py-6 px-4 rounded-md flex-1 flex gap-4">
             <div className="w-1/3">
               <Image
-                src="https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                src={
+                  (teacher?.img as string)
+                    ? (teacher?.img as string)
+                    : teacher?.sex === "FEMALE"
+                      ? "/women.png"
+                      : "/male.png"
+                }
                 alt=""
                 width={144}
                 height={144}
@@ -32,27 +65,11 @@ const SingleTeacherPage = () => {
             </div>
             <div className="w-2/3 flex flex-col justify-between gap-4">
               <div className="flex items-center gap-4">
-                <h1 className="text-xl font-semibold">Leonard Snyder</h1>
+                <h1 className="text-xl font-semibold">
+                  {teacher?.name} {teacher?.surname}
+                </h1>
                 {role === "admin" && (
-                  //   <FormModal
-                  //     table="teacher"
-                  //     type="update"
-                  //     data={{
-                  //       id: 1,
-                  //       username: "deanguerrero",
-                  //       email: "deanguerrero@gmail.com",
-                  //       password: "password",
-                  //       firstName: "Dean",
-                  //       lastName: "Guerrero",
-                  //       phone: "+1 234 567 89",
-                  //       address: "1234 Main St, Anytown, USA",
-                  //       bloodType: "A+",
-                  //       dateOfBirth: "2000-01-01",
-                  //       sex: "male",
-                  //       img: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=1200",
-                  //     }}
-                  //   />
-                  <></>
+                  <FormContainer table="teacher" type="update" data={teacher} />
                 )}
               </div>
               <p className="text-sm text-gray-500">
@@ -61,19 +78,21 @@ const SingleTeacherPage = () => {
               <div className="flex items-center justify-between gap-2 flex-wrap text-xs font-medium">
                 <div className="flex flex-1/2 items-center gap-2">
                   <Syringe className="icon" />
-                  <span>A+</span>
+                  <span>{teacher?.bloodType}</span>
                 </div>
                 <div className="flex flex-1/2 items-center gap-2">
                   <Calendar className="icon" />
-                  <span>January 2025</span>
+                  <span>
+                    {new Intl.DateTimeFormat("en-US").format(teacher?.birthday)}
+                  </span>
                 </div>
                 <div className="flex flex-1/2 items-center gap-2">
                   <Mail className="icon" />
-                  <span>user@gmail.com</span>
+                  <span>{teacher?.email}</span>
                 </div>
                 <div className="flex flex-1/2 items-center gap-2">
                   <Phone className="icon size-4" />
-                  <span>+1 234 567123</span>
+                  <span>{teacher?.phone || "-"}</span>
                 </div>
               </div>
             </div>
@@ -104,8 +123,10 @@ const SingleTeacherPage = () => {
                 className="w-6 h-6"
               />
               <div className="">
-                <h1 className="text-xl font-semibold">2</h1>
-                <span className="text-sm text-gray-400">Branches</span>
+                <h1 className="text-xl font-semibold">
+                  {teacher._count.subjects}
+                </h1>
+                <span className="text-sm text-gray-400">Subjects</span>
               </div>
             </div>
             {/* CARD */}
@@ -118,7 +139,9 @@ const SingleTeacherPage = () => {
                 className="w-6 h-6"
               />
               <div className="">
-                <h1 className="text-xl font-semibold">6</h1>
+                <h1 className="text-xl font-semibold">
+                  {teacher._count.lessons}
+                </h1>
                 <span className="text-sm text-gray-400">Lessons</span>
               </div>
             </div>
@@ -132,7 +155,9 @@ const SingleTeacherPage = () => {
                 className="w-6 h-6"
               />
               <div className="">
-                <h1 className="text-xl font-semibold">6</h1>
+                <h1 className="text-xl font-semibold">
+                  {teacher._count.classes}
+                </h1>
                 <span className="text-sm text-gray-400">Classes</span>
               </div>
             </div>
@@ -141,7 +166,7 @@ const SingleTeacherPage = () => {
         {/* BOTTOM */}
         <div className="mt-4 bg-white rounded-md p-4 h-[800px]">
           <h1>Teacher&apos;s Schedule</h1>
-          <BigCalendar />
+          <BigCalendarContainer type="teacherId" id={params.id} />
         </div>
       </div>
       {/* RIGHT */}
@@ -151,7 +176,7 @@ const SingleTeacherPage = () => {
           <div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
             <Link
               className="p-3 rounded-md bg-SkyLight"
-              href={`/list/classes?supervisorId=${teacher.id}`}
+              href={`/list/classes?supervisorId=${params.id}`}
             >
               Teacher&apos;s Classes
             </Link>
