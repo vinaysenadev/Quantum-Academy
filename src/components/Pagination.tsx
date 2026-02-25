@@ -31,7 +31,7 @@ export default function Pagination({ page, count }: Props) {
 
   return (
     <nav
-      className="flex items-center justify-center mt-6 px-2 w-full"
+      className="flex items-center flex-col gap-2 justify-center mt-2 px-3 w-full"
       aria-label="Pagination Navigation"
     >
       <div className="flex items-center gap-2">

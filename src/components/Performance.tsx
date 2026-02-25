@@ -1,6 +1,5 @@
 "use client";
 
-import { MoreHorizontal } from "lucide-react";
 import React from "react";
 import { PieChart, Pie, ResponsiveContainer } from "recharts";
 
@@ -14,12 +13,6 @@ const Performance = () => {
     <div className="bg-white p-4 rounded-xl h-80 relative shadow-sm">
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-lg font-semibold text-gray-800">Performance</h1>
-        <button
-          className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-          aria-label="More performance details"
-        >
-          <MoreHorizontal className="text-gray-400 size-5" aria-hidden="true" />
-        </button>
       </div>
 
       <div

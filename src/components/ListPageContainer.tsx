@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import React from "react";
 
 import FormContainer from "./FormContainer";
@@ -28,16 +27,19 @@ const ListPageContainer = ({
   page,
 }: ListPageContainerProps) => {
   return (
-    <main className="bg-white p-4 rounded-xl flex-1 m-4 mt-0 shadow-sm">
+    <main className="bg-white p-2 md:p-4 rounded-xl flex-1 m-2 md:m-4shadow-sm">
       <ListPageHeader title={title} count={count} table={table} role={role}>
         {role === "admin" && <FormContainer table={table} type="create" />}
+        {table === "exam" && role === "teacher" && (
+          <FormContainer table={table} type="create" />
+        )}
       </ListPageHeader>
 
       <div className="mt-4">
         <Table columns={columns} renderRow={renderRow} data={data} />
       </div>
 
-      <footer className="mt-4 border-t border-gray-100 pt-4">
+      <footer className="">
         <Pagination page={page} count={count} />
       </footer>
     </main>

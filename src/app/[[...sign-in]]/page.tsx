@@ -2,9 +2,9 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function LoginPage() {
   return (
-    <div className="flex items-center flex-col justify-center h-screen">
+    <div className="flex items-center flex-col justify-center m-5 h-screen">
       <SignIn forceRedirectUrl="/redirect" />
-      <div className="mt-6 max-w-md mx-auto bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm">
+      <div className="shadow-lg mt-6 max-w-md mx-auto bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-center text-blue-700 mb-4">
           Demo Test Credentials
         </h2>

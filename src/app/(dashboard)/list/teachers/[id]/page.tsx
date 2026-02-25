@@ -1,18 +1,14 @@
-import Announcements from "@/components/Announcements";
-
-import BigCalendarContainer from "@/components/BigCalendarContainer";
-import FormContainer from "@/components/FormContainer";
-import Performance from "@/components/Performance";
-// import BigCalendar from "@/components/BigCalender";
-// import FormModal from "@/components/FormModal";
-// import Performance from "@/components/Performance";
-
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { Teacher } from "@prisma/client";
 import { Calendar, Mail, Phone, Syringe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+import Announcements from "@/components/Announcements";
+import BigCalendarContainer from "@/components/BigCalendarContainer";
+import FormContainer from "@/components/FormContainer";
+import Performance from "@/components/Performance";
 
 const SingleTeacherPage = async ({ params }: { params: { id: string } }) => {
   const user = await currentUser();
@@ -41,7 +37,7 @@ const SingleTeacherPage = async ({ params }: { params: { id: string } }) => {
   }
   console.log({ teacher });
   return (
-    <div className="flex-1 p-4 flex flex-col gap-4 xl:flex-row">
+    <div className="flex-1 p-2 md:p-4 flex flex-col gap-4 xl:flex-row">
       {/* LEFT */}
       <div className="w-full xl:w-2/3">
         {/* TOP */}

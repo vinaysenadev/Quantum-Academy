@@ -38,7 +38,7 @@ const Menu = () => {
                     key={item.label}
                     data-tooltip-id="sidebar-tooltip"
                     data-tooltip-content={item.label}
-                    className={`px-0 md:px-4 flex items-center justify-center lg:justify-start gap-3  py-3 transition-all duration-200 group relative ${
+                    className={`px-0 lg:px-4 flex items-center justify-center lg:justify-start gap-3  py-3 transition-all duration-200 group relative ${
                       isActive ? "bg-SkyLight shadow-sm" : "hover:bg-gray-50"
                     }`}
                     aria-label={item.label}

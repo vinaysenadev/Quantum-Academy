@@ -3,6 +3,8 @@
 import React, { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import Loading from "../(dashboard)/list/loading";
+import AdminDashboardSkeleton from "@/components/AdminDashboardSkeleton";
 
 export default function RedirectPage() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -18,5 +20,5 @@ export default function RedirectPage() {
     }
   }, [isLoaded, isSignedIn, user, router]);
 
-  return <p>Redirecting...</p>;
+  return <AdminDashboardSkeleton />;
 }

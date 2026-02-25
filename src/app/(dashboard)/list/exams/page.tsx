@@ -5,6 +5,7 @@ import { ITEMS_PER_PAGE } from "@/lib/settings";
 import { currentUser } from "@clerk/nextjs/server";
 import { Class, Exam, Prisma, Subject, Teacher } from "@prisma/client";
 import { getPageNumber } from "@/lib/queryUtils";
+import FormContainer from "@/components/FormContainer";
 
 type ExamList = Exam & {
   lesson: {
@@ -144,8 +145,8 @@ const ExamListPage = async ({
         <div className="flex items-center justify-center gap-2">
           {(role === "admin" || role === "teacher") && (
             <>
-              <FormModal table="exam" type="update" data={item} />
-              <FormModal table="exam" type="delete" id={item.id} />
+              <FormContainer table="exam" type="update" data={item} />
+              <FormContainer table="exam" type="delete" id={item.id} />
             </>
           )}
         </div>

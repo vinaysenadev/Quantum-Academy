@@ -1,10 +1,3 @@
-import Announcements from "@/components/Announcements";
-import BigCalendar from "@/components/BigCalendar";
-import BigCalendarContainer from "@/components/BigCalendarContainer";
-import FormContainer from "@/components/FormContainer";
-
-import Performance from "@/components/Performance";
-import StudentAttenanceCard from "@/components/StudentAttenanceCard";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { Class, Student } from "@prisma/client";
@@ -12,6 +5,12 @@ import { Calendar, Mail, Phone, Syringe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
+
+import Announcements from "@/components/Announcements";
+import BigCalendarContainer from "@/components/BigCalendarContainer";
+import FormContainer from "@/components/FormContainer";
+import Performance from "@/components/Performance";
+import StudentAttenanceCard from "@/components/StudentAttenanceCard";
 
 const SingleStudentPage = async ({ params }: { params: { id: string } }) => {
   const user = await currentUser();
@@ -33,12 +32,9 @@ const SingleStudentPage = async ({ params }: { params: { id: string } }) => {
     return <div>Student not found</div>;
   }
   return (
-    <div className="flex-1 p-4 flex flex-col gap-4 xl:flex-row">
-      {/* LEFT */}
+    <div className="flex-1 p-2 md:p-4 flex flex-col gap-4 xl:flex-row">
       <div className="w-full xl:w-2/3">
-        {/* TOP */}
         <div className="flex flex-col lg:flex-row gap-4">
-          {/* USER INFO CARD */}
           <div className="bg-Sky p-2 rounded-md flex-1 flex  gap-1">
             <div className="w-1/3 md:w-1/3  p-2">
               <Image
@@ -86,9 +82,8 @@ const SingleStudentPage = async ({ params }: { params: { id: string } }) => {
               </div>
             </div>
           </div>
-          {/* SMALL CARDS */}
+
           <div className="flex-1 flex gap-4 justify-between flex-wrap">
-            {/* CARD */}
             <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
               <Image
                 src="/singleAttendance.png"
@@ -101,7 +96,7 @@ const SingleStudentPage = async ({ params }: { params: { id: string } }) => {
                 <StudentAttenanceCard studentId={student.id} />
               </Suspense>
             </div>
-            {/* CARD */}
+
             <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
               <Image
                 src="/singleBranch.png"
@@ -117,7 +112,7 @@ const SingleStudentPage = async ({ params }: { params: { id: string } }) => {
                 <span className="text-sm text-gray-400">Grade</span>
               </div>
             </div>
-            {/* CARD */}
+
             <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
               <Image
                 src="/singleLesson.png"
@@ -133,7 +128,7 @@ const SingleStudentPage = async ({ params }: { params: { id: string } }) => {
                 <span className="text-sm text-gray-400">Lessons</span>
               </div>
             </div>
-            {/* CARD */}
+
             <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
               <Image
                 src="/singleClass.png"
@@ -151,13 +146,13 @@ const SingleStudentPage = async ({ params }: { params: { id: string } }) => {
             </div>
           </div>
         </div>
-        {/* BOTTOM */}
+
         <div className="mt-4 bg-white rounded-md p-4 h-[800px]">
           <h1>Student&apos;s Schedule</h1>
           <BigCalendarContainer type="classId" id={student.classId} />
         </div>
       </div>
-      {/* RIGHT */}
+
       <div className="w-full xl:w-1/3 flex flex-col gap-4">
         <div className="bg-white p-4 rounded-md">
           <h1 className="text-xl font-semibold">Shortcuts</h1>

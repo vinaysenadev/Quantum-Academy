@@ -1145,24 +1145,24 @@ export const menuItems = [
         href: "/list/results",
         visible: ["admin", "teacher", "student", "parent"],
       },
-      {
-        icon: CalendarCheck,
-        label: "Attendance",
-        href: "/list/attendance",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
+      // {
+      //   icon: CalendarCheck,
+      //   label: "Attendance",
+      //   href: "/list/attendance",
+      //   visible: ["admin", "teacher", "student", "parent"],
+      // },
       {
         icon: CalendarRange,
         label: "Events",
         href: "/list/events",
         visible: ["admin", "teacher", "student", "parent"],
       },
-      {
-        icon: MessageCircleCode,
-        label: "Messages",
-        href: "/list/messages",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
+      // {
+      //   icon: MessageCircleCode,
+      //   label: "Messages",
+      //   href: "/list/messages",
+      //   visible: ["admin", "teacher", "student", "parent"],
+      // },
       {
         icon: Megaphone,
         label: "Bulletins",
@@ -1171,29 +1171,29 @@ export const menuItems = [
       },
     ],
   },
-  {
-    title: "OTHER",
-    items: [
-      {
-        icon: UserCircle,
-        label: "Profile",
-        href: "/profile",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-      {
-        icon: Cog,
-        label: "Settings",
-        href: "/settings",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-      {
-        label: "Logout",
-        href: "/logout",
-        icon: LogOut,
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-    ],
-  },
+  // {
+  //   title: "OTHER",
+  //   items: [
+  //     {
+  //       icon: UserCircle,
+  //       label: "Profile",
+  //       href: "/profile",
+  //       visible: ["admin", "teacher", "student", "parent"],
+  //     },
+  //     {
+  //       icon: Cog,
+  //       label: "Settings",
+  //       href: "/settings",
+  //       visible: ["admin", "teacher", "student", "parent"],
+  //     },
+  //     {
+  //       label: "Logout",
+  //       href: "/logout",
+  //       icon: LogOut,
+  //       visible: ["admin", "teacher", "student", "parent"],
+  //     },
+  //   ],
+  // },
 ];
 export const bgColors = [
   "bg-Sky",

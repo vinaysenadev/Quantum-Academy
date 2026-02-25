@@ -15,7 +15,7 @@ const AdminPage = ({
   searchParams: { [key: string]: string | undefined };
 }) => {
   return (
-    <div className="p-4 flex gap-4 flex-col md:flex-row">
+    <div className="p-2 md:p-4 flex gap-4 flex-col md:flex-row">
       {/* left */}
       <div className="w-full lg:w-2/3 flex flex-col gap-4">
         {/* usercards */}

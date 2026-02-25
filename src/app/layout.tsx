@@ -28,7 +28,7 @@ export default function RootLayout({
           {children}
           <ToastContainer
             position="bottom-right"
-            theme="colored"
+            theme="dark"
             hideProgressBar={false}
             newestOnTop
             closeOnClick

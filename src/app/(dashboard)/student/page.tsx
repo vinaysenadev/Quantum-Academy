@@ -17,7 +17,7 @@ const StudentPage = async ({
   });
 
   return (
-    <div className="p-4 flex gap-4 flex-col md:flex-row">
+    <div className="p-2 md:p-4 flex gap-4 flex-col md:flex-row">
       {/* left */}
       <div className="w-full xl:w-2/3 ">
         <div className="h-full bg-white p-4 rounded-md">

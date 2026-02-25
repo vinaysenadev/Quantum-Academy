@@ -1,6 +1,6 @@
+import React from "react";
 import { School } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 
 import Menu from "@/components/Menu";
 import Navbar from "@/components/Navbar";
@@ -12,14 +12,13 @@ export default function DashboardLayout({
 }>) {
   return (
     <div className="h-screen flex overflow-hidden">
-      {/* LEFT SIDEBAR */}
       <aside
         className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[14%] bg-white border-r border-gray-100 flex flex-col"
         aria-label="Sidebar Menu"
       >
         <Link
           href="/"
-          className="flex justify-center items-center lg:justify-start gap-2 p-6 hover:opacity-80 transition-opacity"
+          className="flex justify-center items-center lg:justify-start gap-2 p-2 md:p-4 hover:opacity-80 transition-opacity"
           aria-label="Quantum Academy Home"
         >
           <School className="size-8 text-[#581c87]" />
@@ -38,13 +37,12 @@ export default function DashboardLayout({
         </div>
       </aside>
 
-      {/* RIGHT CONTENT AREA */}
       <main
         className="flex-1 bg-[#F7F8FA] overflow-y-auto flex flex-col"
         role="main"
       >
         <Navbar />
-        <div className="p-4 flex-1">{children}</div>
+        <div className="flex-1">{children}</div>
       </main>
     </div>
   );

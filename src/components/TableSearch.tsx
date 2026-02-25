@@ -1,8 +1,8 @@
 "use client";
 
+import React, { useTransition } from "react";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useTransition } from "react";
 
 const TableSearch = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const TableSearch = () => {
     } else {
       params.delete("search");
     }
-    // Reset to page 1 on search
+
     params.set("page", "1");
 
     startTransition(() => {
@@ -40,7 +40,7 @@ const TableSearch = () => {
             className="w-6 h-6 border-2 border-purple-700/30 border-t-purple-700 rounded-full animate-spin"
             aria-hidden="true"
           />
-          <span className="text-md text-gray-400">Searching...</span>
+          <span className="text-sm md:text-md text-gray-400">Searching...</span>
         </div>
       )}
       <form

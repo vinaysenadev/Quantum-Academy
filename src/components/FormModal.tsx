@@ -7,15 +7,21 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 
-import { deleteClass, deleteSubject, deleteTeacher } from "@/lib/actions";
+import {
+  deleteClass,
+  deleteExam,
+  deleteStudent,
+  deleteSubject,
+  deleteTeacher,
+} from "@/lib/actions";
 import type { FormContainerProps } from "./FormContainer";
 
 const deleteActionMap = {
   subject: deleteSubject,
   class: deleteClass,
   teacher: deleteTeacher,
-  student: deleteSubject,
-  exam: deleteSubject,
+  student: deleteStudent,
+  exam: deleteExam,
   // other actions
   parent: deleteSubject,
   lesson: deleteSubject,
@@ -36,6 +42,10 @@ const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
   loading: () => <h1 aria-live="polite">Loading...</h1>,
 });
 const ClassForm = dynamic(() => import("./forms/ClassForm"), {
+  loading: () => <h1 aria-live="polite">Loading...</h1>,
+});
+
+const ExamForm = dynamic(() => import("./forms/ExamForm"), {
   loading: () => <h1 aria-live="polite">Loading...</h1>,
 });
 
@@ -73,6 +83,14 @@ const forms: {
   ),
   class: (setOpen, type, data, relatedData) => (
     <ClassForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relatedData={relatedData}
+    />
+  ),
+  exam: (setOpen, type, data, relatedData) => (
+    <ExamForm
       type={type}
       data={data}
       setOpen={setOpen}
@@ -176,8 +194,10 @@ const FormModal = ({
       >
         {type === "create" && (
           <>
-            <Plus className="font-semibold" aria-hidden="true" />{" "}
-            <span className="capitalize font-semibold">Add {table}</span>
+            <Plus className="size-4 font-semibold" aria-hidden="true" />{" "}
+            <span className="text-sm capitalize font-semibold">
+              Add {table}
+            </span>
           </>
         )}
         {type === "update" && <Edit className="icon" aria-hidden="true" />}

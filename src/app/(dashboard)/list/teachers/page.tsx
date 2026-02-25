@@ -1,7 +1,5 @@
 export const dynamic = "force-dynamic";
 
-import FormModal from "@/components/FormModal";
-import Table from "@/components/Table";
 import ListPageContainer from "@/components/ListPageContainer";
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/settings";
@@ -10,6 +8,7 @@ import { Class, Prisma, Subject, Teacher } from "@prisma/client";
 import { View } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
 import { getPageNumber } from "@/lib/queryUtils";
 import FormContainer from "@/components/FormContainer";
 
@@ -25,7 +24,6 @@ const TeacherListPage = async ({
   const { page, ...queryParams } = searchParams;
 
   const p = getPageNumber(page);
-
   const query: Prisma.TeacherWhereInput = {};
 
   if (queryParams) {
