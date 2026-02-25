@@ -10,8 +10,22 @@ import "react-toastify/dist/ReactToastify.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Quantum Academy | Dashboard",
-  description: "Modern School Management System for Quantum Academy",
+  title: "Quantum Academy | Modern School Management",
+  description:
+    "A comprehensive and modern School Management Systems for Quantum Academy, featuring role-based dashboards, academic tracking, and real-time announcements.",
+  keywords: [
+    "school management",
+    "dashboard",
+    "education",
+    "quantum academy",
+    "nextjs",
+  ],
+  authors: [{ name: "Quantum Team" }],
+  openGraph: {
+    title: "Quantum Academy | Dashboard",
+    description: "Modern School Management System for Quantum Academy",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
