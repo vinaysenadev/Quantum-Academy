@@ -165,7 +165,7 @@ const FormModal = ({
       <button
         className={
           type === "create"
-            ? "button-rounded"
+            ? "button-rounded rounded-md w-full p-4  gap-2"
             : type === "delete"
               ? "button-rounded-delete"
               : "button-rounded-purple"
@@ -174,7 +174,12 @@ const FormModal = ({
         aria-label={buttonLabel}
         title={buttonLabel}
       >
-        {type === "create" && <Plus className="icon" aria-hidden="true" />}
+        {type === "create" && (
+          <>
+            <Plus className="font-semibold" aria-hidden="true" />{" "}
+            <span className="capitalize font-semibold">Add {table}</span>
+          </>
+        )}
         {type === "update" && <Edit className="icon" aria-hidden="true" />}
         {type === "delete" && <Trash2 className="icon" aria-hidden="true" />}
       </button>

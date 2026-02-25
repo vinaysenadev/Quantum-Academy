@@ -2,6 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { Tooltip } from "react-tooltip";
 
@@ -10,6 +11,7 @@ import { menuItems } from "@/lib/data";
 const Menu = () => {
   const { user } = useUser();
   const role = user?.publicMetadata?.role as string;
+  const pathname = usePathname();
 
   return (
     <nav
@@ -26,22 +28,42 @@ const Menu = () => {
             {segment.items.map((item) => {
               if (item.visible.includes(role)) {
                 const Icon = item.icon;
+                const isActive =
+                  item.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(item.href);
                 return (
                   <Link
                     href={item.href}
                     key={item.label}
                     data-tooltip-id="sidebar-tooltip"
                     data-tooltip-content={item.label}
-                    className="flex items-center justify-center lg:justify-start gap-3 px-4 py-2 hover:bg-SkyLight transition-colors group"
+                    className={`px-0 md:px-4 flex items-center justify-center lg:justify-start gap-3  py-3 transition-all duration-200 group relative ${
+                      isActive ? "bg-SkyLight shadow-sm" : "hover:bg-gray-50"
+                    }`}
                     aria-label={item.label}
+                    aria-current={isActive ? "page" : undefined}
                   >
+                    {isActive && (
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-purple-600 hidden lg:block" />
+                    )}
                     {Icon && (
                       <Icon
-                        className="size-5 text-purple-500 group-hover:text-purple-700 transition-colors"
+                        className={`size-5 transition-colors ${
+                          isActive
+                            ? "text-purple-700"
+                            : "text-gray-400 group-hover:text-purple-600"
+                        }`}
                         aria-hidden="true"
                       />
                     )}
-                    <span className="hidden lg:block text-gray-600 text-[14px] group-hover:text-purple-700 transition-colors">
+                    <span
+                      className={`hidden lg:block text-[14px] transition-colors ${
+                        isActive
+                          ? "text-purple-700 font-semibold"
+                          : "text-gray-600 group-hover:text-purple-600"
+                      }`}
+                    >
                       {item.label}
                     </span>
                   </Link>

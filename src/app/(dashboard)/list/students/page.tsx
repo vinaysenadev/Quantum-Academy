@@ -8,6 +8,7 @@ import { View } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getPageNumber } from "@/lib/queryUtils";
+import FormContainer from "@/components/FormContainer";
 
 type StudentList = Student & { class: Class } & { grade: Grade };
 
@@ -129,7 +130,7 @@ const StudentListPage = async ({
             </button>
           </Link>
           {role === "admin" && (
-            <FormModal table="student" type="delete" id={item.id} />
+            <FormContainer table="student" type="delete" id={item.id} />
           )}
         </div>
       </td>

@@ -39,7 +39,7 @@ const SingleTeacherPage = async ({ params }: { params: { id: string } }) => {
   if (!teacher) {
     return <div>Teacher not found</div>;
   }
-  console.log("****---------", teacher, "TEACHER-------");
+  console.log({ teacher });
   return (
     <div className="flex-1 p-4 flex flex-col gap-4 xl:flex-row">
       {/* LEFT */}
@@ -47,8 +47,8 @@ const SingleTeacherPage = async ({ params }: { params: { id: string } }) => {
         {/* TOP */}
         <div className="flex flex-col lg:flex-row gap-4">
           {/* USER INFO CARD */}
-          <div className="bg-Sky py-6 px-4 rounded-md flex-1 flex gap-4">
-            <div className="w-1/3">
+          <div className="bg-Sky p-2 rounded-md flex-1 flex  gap-1">
+            <div className="w-1/3 md:w-1/3  p-2">
               <Image
                 src={
                   (teacher?.img as string)
@@ -60,38 +60,35 @@ const SingleTeacherPage = async ({ params }: { params: { id: string } }) => {
                 alt=""
                 width={144}
                 height={144}
-                className="w-36 h-36 rounded-full object-cover"
+                className="w-full h-full  rounded-xl object-cover"
               />
             </div>
-            <div className="w-2/3 flex flex-col justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <h1 className="text-xl font-semibold">
+            <div className="w-2/3  p-2 flex flex-col gap-2 justify-between">
+              <div className="flex justify-between items-center">
+                <h1 className="text-md md:text-xl font-semibold capitalize">
                   {teacher?.name} {teacher?.surname}
                 </h1>
                 {role === "admin" && (
                   <FormContainer table="teacher" type="update" data={teacher} />
                 )}
               </div>
-              <p className="text-sm text-gray-500">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-              </p>
-              <div className="flex items-center justify-between gap-2 flex-wrap text-xs font-medium">
+              <div className="flex flex-col gap-1.5 text-sm font-semibold text-gray-500">
                 <div className="flex flex-1/2 items-center gap-2">
-                  <Syringe className="icon" />
+                  <Syringe className="icon text-black" />
                   <span>{teacher?.bloodType}</span>
                 </div>
                 <div className="flex flex-1/2 items-center gap-2">
-                  <Calendar className="icon" />
+                  <Calendar className="icon text-black" />
                   <span>
                     {new Intl.DateTimeFormat("en-US").format(teacher?.birthday)}
                   </span>
                 </div>
                 <div className="flex flex-1/2 items-center gap-2">
-                  <Mail className="icon" />
+                  <Mail className="icon text-black" />
                   <span>{teacher?.email}</span>
                 </div>
                 <div className="flex flex-1/2 items-center gap-2">
-                  <Phone className="icon size-4" />
+                  <Phone className="icon text-black size-4" />
                   <span>{teacher?.phone || "-"}</span>
                 </div>
               </div>
@@ -166,7 +163,7 @@ const SingleTeacherPage = async ({ params }: { params: { id: string } }) => {
         {/* BOTTOM */}
         <div className="mt-4 bg-white rounded-md p-4 h-[800px]">
           <h1>Teacher&apos;s Schedule</h1>
-          <BigCalendarContainer type="teacherId" id={params.id} />
+          <BigCalendarContainer type="teacherId" id={teacher?.id} />
         </div>
       </div>
       {/* RIGHT */}

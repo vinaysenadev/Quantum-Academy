@@ -53,9 +53,9 @@ const Announcements = async () => {
               className={`${bgColors[index % bgColors.length]} rounded-md p-4`}
               role="listitem"
             >
-              <div className="flex items-center justify-between">
-                <h2 className="font-medium">{announcement.title}</h2>
-                <span className="text-xs text-gray-500 bg-white/80 rounded-md px-2 py-1">
+              <div className=" relative flex items-center justify-between ">
+                <h2 className="font-medium mt-3">{announcement.title}</h2>
+                <span className="absolute -right-3 -top-3 flex text-xs text-gray-500 bg-white/80 rounded-md p-1 ">
                   {announcement.date.toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
